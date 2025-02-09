@@ -1,0 +1,84 @@
+.cafeteira {
+    position: relative;
+    width: 300px;
+    height: 500px;
+    margin: 50px auto;
+    background-color: #d3d3d3;
+    border-radius: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  }
+  
+  .base {
+    position: absolute;
+    left: 20px;
+    bottom: 20px;
+    width: 20px;
+    height: calc(100% - 40px);
+    background-color: #a9a9a9;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  
+  .barraAgua {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    background-color: #00bfff;
+    transition: height 0.1s;
+  }
+  
+  .corpo {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 20px;
+    width: 200px;
+    height: 300px;
+    background-color: #808080;
+    border-radius: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .botoes {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .botaoLimpar {
+    width: 60px;
+    height: 60px;
+    background-color: #ff0000;
+    border-radius: 10px;
+    cursor: pointer;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+    text-align: center;
+  }
+  
+  .botaoLigar {
+    padding: 10px 20px;
+    background-color: #32cd32;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    color: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  }
+  
+  .botaoLigar:active {
+    background-color: #228b22;
+  }
