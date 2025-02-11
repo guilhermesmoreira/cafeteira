@@ -1,84 +1,220 @@
 .cafeteira {
-    position: relative;
-    width: 300px;
-    height: 500px;
-    margin: 50px auto;
-    background-color: #d3d3d3;
-    border-radius: 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    padding: 20px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-  }
-  
-  .base {
-    position: absolute;
-    left: 20px;
-    bottom: 20px;
-    width: 20px;
-    height: calc(100% - 40px);
-    background-color: #a9a9a9;
-    border-radius: 10px;
-    overflow: hidden;
-  }
-  
-  .barraAgua {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    background-color: #00bfff;
-    transition: height 0.1s;
-  }
-  
-  .corpo {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    bottom: 20px;
-    width: 200px;
-    height: 300px;
-    background-color: #808080;
-    border-radius: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  .botoes {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-  }
-  
-  .botaoLimpar {
-    width: 60px;
-    height: 60px;
-    background-color: #ff0000;
-    border-radius: 10px;
-    cursor: pointer;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: white;
-    font-size: 14px;
-    font-weight: bold;
-    text-align: center;
-  }
-  
-  .botaoLigar {
-    padding: 10px 20px;
-    background-color: #32cd32;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    color: white;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-  }
-  
-  .botaoLigar:active {
-    background-color: #228b22;
-  }
+  position: relative;
+  width: 300px;
+  height: 500px;
+  margin: 50px auto;
+  background-color: #d3d3d3;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.containerCafe {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 200px;
+  height: 50px;
+  background-color: #f0f0f0;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.barraCafe {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  background-color: #000000; /* Barra preta para o café */
+  transition: height 0.1s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white; /* Cor do texto */
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.mensagem {
+  position: absolute;
+  top: 80px; /* Posição abaixo do container de café */
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 16px;
+  font-weight: bold;
+  color: #32cd32; /* Verde para a mensagem */
+}
+
+.base {
+  position: absolute;
+  left: 20px;
+  bottom: 20px;
+  width: 40px; /* Largura aumentada */
+  height: calc(100% - 40px);
+  background-color: #a9a9a9;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.barraAgua {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  background-color: #00bfff; /* Azul para a água */
+  transition: height 0.1s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white; /* Cor do texto */
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.barraCafePronto {
+  background-color: #8b4513; /* Marrom para o café preparado */
+}
+
+.porcentagem {
+  z-index: 1; /* Garante que o texto fique acima da barra */
+}
+
+.corpo {
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 20px;
+  width: 200px;
+  height: 300px;
+  background-color: #808080;
+  border-radius: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.botoes {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+}
+
+.botaoLimpar {
+  width: 60px;
+  height: 60px;
+  background-color: #ff0000;
+  border-radius: 10px;
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
+  text-align: center;
+  transition: background-color 0.3s ease; /* Transição suave de cor */
+}
+
+.botaoLimpar.desativado {
+  background-color: #a9a9a9; /* Cinza quando desativado */
+  cursor: not-allowed; /* Cursor de não permitido */
+}
+
+.botaoAgua {
+  width: 60px;
+  height: 60px;
+  background-color: #00bfff; /* Azul para adicionar água */
+  border-radius: 10px;
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
+  text-align: center;
+  transition: background-color 0.3s ease; /* Transição suave de cor */
+}
+
+.botaoAgua.desativado {
+  background-color: #a9a9a9; /* Cinza quando desativado */
+  cursor: not-allowed; /* Cursor de não permitido */
+}
+
+.botaoCafe {
+  width: 60px;
+  height: 60px;
+  background-color: #8b4513; /* Marrom para adicionar café */
+  border-radius: 10px;
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
+  text-align: center;
+  transition: background-color 0.3s ease; /* Transição suave de cor */
+}
+
+.botaoCafe.desativado {
+  background-color: #a9a9a9; /* Cinza quando desativado */
+  cursor: not-allowed; /* Cursor de não permitido */
+}
+
+.botaoPreparar {
+  width: 100px;
+  height: 60px;
+  background-color: #32cd32; /* Verde para o botão preparar café */
+  border-radius: 10px;
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
+  text-align: center;
+  transition: background-color 0.3s ease; /* Transição suave de cor */
+}
+
+.botaoPreparar.desativado {
+  background-color: #a9a9a9; /* Cinza quando desativado */
+  cursor: not-allowed; /* Cursor de não permitido */
+}
+
+.botaoLigar {
+  position: absolute;
+  top: 20px;
+  right: 10px;
+  width: 15%;
+  height: 10%;
+  background-color: #ff0000; /* Vermelho quando desligado */
+  border: none;
+  border-radius: 50%; /* Botão redondo */
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+  transition: background-color 0.3s ease; /* Transição suave de cor */
+}
+
+.botaoLigar.ligado {
+  background-color: #32cd32; /* Verde quando ligado */
+}

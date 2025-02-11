@@ -2,6 +2,7 @@ import React from 'react';
 import './App.css';
 import Cafeteira from './components/Cafeteira'; 
 
+
 function App() {
   return (
     <div className="App">
