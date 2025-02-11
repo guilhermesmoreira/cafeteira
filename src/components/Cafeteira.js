@@ -8,6 +8,8 @@ const Cafeteira = () => {
   const [preenchendoAgua, setPreenchendoAgua] = useState(false); // Estado para controlar o preenchimento da água
   const [preenchendoCafe, setPreenchendoCafe] = useState(false); // Estado para controlar o preenchimento do café
   const [cafePronto, setCafePronto] = useState(false); // Estado para controlar a mensagem "Café pronto!"
+  const [corAgua, setCorAgua] = useState('#00bfff'); // Estado para controlar a cor da água
+  const [mensagem, setMensagem] = useState(''); // Estado para controlar a mensagem
 
   // Lógica de preenchimento automático da água
   useEffect(() => {
@@ -35,15 +37,51 @@ const Cafeteira = () => {
     return () => clearInterval(intervalo); // Limpa o intervalo ao desmontar o componente
   }, [preenchendoCafe, cafe]);
 
+  // Lógica para mudança de cor da água e mensagem
+  useEffect(() => {
+    if (cafePronto) {
+      setMensagem('Preparando Café...'); // Mensagem durante a transição
+
+      const inicio = Date.now(); // Tempo inicial
+      const duracao = 4000; // Duração da transição em milissegundos (4 segundos)
+
+      const intervalo = setInterval(() => {
+        const tempoDecorrido = Date.now() - inicio; // Tempo decorrido desde o início
+        const progresso = Math.min(tempoDecorrido / duracao, 1); // Progresso de 0 a 1
+
+        // Interpolação entre azul (#00bfff) e marrom (#8b4513)
+        const azul = [0, 191, 255];
+        const marrom = [139, 69, 19];
+        const novaCor = azul.map((valor, index) =>
+          Math.round(valor + (marrom[index] - valor) * progresso)
+        );
+        setCorAgua(`rgb(${novaCor.join(',')})`);
+
+        // Finaliza a transição após 4 segundos
+        if (progresso >= 1) {
+          clearInterval(intervalo);
+          setMensagem('Café Pronto!'); // Mensagem final
+        }
+      }, 50); // Atualiza a cor a cada 50ms
+
+      return () => clearInterval(intervalo); // Limpa o intervalo ao desmontar o componente
+    } else {
+      setCorAgua('#00bfff'); // Volta para azul se o café não estiver pronto
+      setMensagem(''); // Limpa a mensagem
+    }
+  }, [cafePronto]);
+
   const ligarDesligar = () => {
-    setLigada(!ligada);
-    if (agua >= 100) {
-      setAgua(0);
+    if (ligada) {
+      if (agua === 0 && cafe === 0) {
+        setLigada(false);
+        setCafePronto(false); // Reseta a mensagem "Café pronto!" ao desligar
+      } else {
+        setMensagem('Limpe a máquina antes de desligar!');
+      }
+    } else {
+      setLigada(true);
     }
-    if (cafe >= 100) {
-      setCafe(0);
-    }
-    setCafePronto(false); // Reseta a mensagem "Café pronto!" ao desligar
   };
 
   const limpar = () => {
@@ -69,8 +107,8 @@ const Cafeteira = () => {
   };
 
   const prepararCafe = () => {
-    if (ligada && agua > 0 && cafe > 0) {
-      setCafePronto(true); // Exibe a mensagem "Café pronto!"
+    if (ligada && agua === 100 && cafe === 100) {
+      setCafePronto(true); // Inicia a preparação do café
     }
   };
 
@@ -82,42 +120,46 @@ const Cafeteira = () => {
           <span className={style.porcentagem}>{cafe}%</span>
         </div>
       </div>
-      {cafePronto && <div className={style.mensagem}>Café pronto!</div>}
+      {mensagem && <div className={style.mensagem}>{mensagem}</div>}
 
       <div className={style.base}>
         <div
-          className={`${style.barraAgua} ${cafePronto ? style.barraCafePronto : ''}`}
-          style={{ height: `${agua}%` }}
+          className={style.barraAgua}
+          style={{ height: `${agua}%`, backgroundColor: corAgua }}
         >
           <span className={style.porcentagem}>{agua}%</span>
         </div>
       </div>
       <div className={style.corpo}>
         <div className={style.botoes}>
-          <div
-            className={`${style.botaoLimpar} ${!ligada ? style.desativado : ''}`}
-            onClick={limpar}
-          >
-            Limpar
+          <div className={style.botoesSuperiores}>
+            <div
+              className={`${style.botaoAgua} ${!ligada ? style.desativado : ''}`}
+              onClick={adicionarAgua}
+            >
+              {preenchendoAgua ? 'Pausar' : 'Água'}
+            </div>
+            <div
+              className={`${style.botaoCafe} ${!ligada ? style.desativado : ''}`}
+              onClick={adicionarCafe}
+            >
+              {preenchendoCafe ? 'Pausar' : 'Café'}
+            </div>
           </div>
           <div
-            className={`${style.botaoAgua} ${!ligada ? style.desativado : ''}`}
-            onClick={adicionarAgua}
-          >
-            {preenchendoAgua ? 'Pausar' : 'Água'}
-          </div>
-          <div
-            className={`${style.botaoCafe} ${!ligada ? style.desativado : ''}`}
-            onClick={adicionarCafe}
-          >
-            {preenchendoCafe ? 'Pausar' : 'Café'}
-          </div>
-          <div
-            className={`${style.botaoPreparar} ${!ligada ? style.desativado : ''}`}
+            className={`${style.botaoPreparar} ${
+              !ligada || agua < 100 || cafe < 100 ? style.desativado : ''
+            }`}
             onClick={prepararCafe}
           >
             Preparar Café
           </div>
+        </div>
+        <div
+          className={`${style.botaoLimpar} ${!ligada ? style.desativado : ''}`}
+          onClick={limpar}
+        >
+          Limpar
         </div>
       </div>
       <button
