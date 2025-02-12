@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from "react";
 import style from "./Cafeteira.module.css"; // Importando o CSS Module
+import somCafePronto from '../assets/somCafePronto.wav';
+import somLimpar from '../assets/somLimpar.wav';
+
 
 const Cafeteira = () => {
   const [agua, setAgua] = useState(0);
@@ -62,6 +65,7 @@ const Cafeteira = () => {
         if (progresso >= 1) {
           clearInterval(intervalo);
           setMensagem("Café Pronto!"); // Mensagem final
+          tocarSom(somCafePronto);
         }
       }, 50); // Atualiza a cor a cada 50ms
 
@@ -87,6 +91,7 @@ const Cafeteira = () => {
 
   const limpar = () => {
     if (ligada) {
+      tocarSom(somLimpar);
       setAgua(0);
       setCafe(0);
       setPreenchendoAgua(false);
@@ -118,6 +123,11 @@ const Cafeteira = () => {
   
     setCafeServido(true);
     setMensagem('Café Servido!');
+  };
+
+  const tocarSom = (som) => {
+    const audio = new Audio(som);
+    audio.play();
   };
 
   return (
