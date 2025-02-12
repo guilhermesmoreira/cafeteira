@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import style from './Cafeteira.module.css'; // Importando o CSS Module
+import React, { useState, useEffect } from "react";
+import style from "./Cafeteira.module.css"; // Importando o CSS Module
 
 const Cafeteira = () => {
   const [agua, setAgua] = useState(0);
@@ -8,8 +8,9 @@ const Cafeteira = () => {
   const [preenchendoAgua, setPreenchendoAgua] = useState(false); // Estado para controlar o preenchimento da água
   const [preenchendoCafe, setPreenchendoCafe] = useState(false); // Estado para controlar o preenchimento do café
   const [cafePronto, setCafePronto] = useState(false); // Estado para controlar a mensagem "Café pronto!"
-  const [corAgua, setCorAgua] = useState('#00bfff'); // Estado para controlar a cor da água
-  const [mensagem, setMensagem] = useState(''); // Estado para controlar a mensagem
+  const [corAgua, setCorAgua] = useState("#00bfff"); // Estado para controlar a cor da água
+  const [mensagem, setMensagem] = useState(""); // Estado para controlar a mensagem
+  const [cafeServido, setCafeServido] = useState(false);
 
   // Lógica de preenchimento automático da água
   useEffect(() => {
@@ -40,7 +41,7 @@ const Cafeteira = () => {
   // Lógica para mudança de cor da água e mensagem
   useEffect(() => {
     if (cafePronto) {
-      setMensagem('Preparando Café...'); // Mensagem durante a transição
+      setMensagem("Preparando Café..."); // Mensagem durante a transição
 
       const inicio = Date.now(); // Tempo inicial
       const duracao = 4000; // Duração da transição em milissegundos (4 segundos)
@@ -55,19 +56,19 @@ const Cafeteira = () => {
         const novaCor = azul.map((valor, index) =>
           Math.round(valor + (marrom[index] - valor) * progresso)
         );
-        setCorAgua(`rgb(${novaCor.join(',')})`);
+        setCorAgua(`rgb(${novaCor.join(",")})`);
 
         // Finaliza a transição após 4 segundos
         if (progresso >= 1) {
           clearInterval(intervalo);
-          setMensagem('Café Pronto!'); // Mensagem final
+          setMensagem("Café Pronto!"); // Mensagem final
         }
       }, 50); // Atualiza a cor a cada 50ms
 
       return () => clearInterval(intervalo); // Limpa o intervalo ao desmontar o componente
     } else {
-      setCorAgua('#00bfff'); // Volta para azul se o café não estiver pronto
-      setMensagem(''); // Limpa a mensagem
+      setCorAgua("#00bfff"); // Volta para azul se o café não estiver pronto
+      setMensagem(""); // Limpa a mensagem
     }
   }, [cafePronto]);
 
@@ -77,7 +78,7 @@ const Cafeteira = () => {
         setLigada(false);
         setCafePronto(false); // Reseta a mensagem "Café pronto!" ao desligar
       } else {
-        setMensagem('Limpe a máquina antes de desligar!');
+        setMensagem("Limpe a máquina antes de desligar!");
       }
     } else {
       setLigada(true);
@@ -112,6 +113,13 @@ const Cafeteira = () => {
     }
   };
 
+  const servirCafe = () => {
+    if (!cafePronto) return; // Impede a ação caso o café não esteja pronto
+  
+    setCafeServido(true);
+    setMensagem('Café Servido!');
+  };
+
   return (
     <div className={style.cafeteira}>
       {/* Container do café */}
@@ -134,39 +142,52 @@ const Cafeteira = () => {
         <div className={style.botoes}>
           <div className={style.botoesSuperiores}>
             <div
-              className={`${style.botaoAgua} ${!ligada ? style.desativado : ''}`}
+              className={`${style.botaoAgua} ${
+                !ligada ? style.desativado : ""
+              }`}
               onClick={adicionarAgua}
             >
-              {preenchendoAgua ? 'Pausar' : 'Água'}
+              {preenchendoAgua ? "Pausar" : "Água"}
             </div>
             <div
-              className={`${style.botaoCafe} ${!ligada ? style.desativado : ''}`}
+              className={`${style.botaoCafe} ${
+                !ligada ? style.desativado : ""
+              }`}
               onClick={adicionarCafe}
             >
-              {preenchendoCafe ? 'Pausar' : 'Café'}
+              {preenchendoCafe ? "Pausar" : "Café"}
             </div>
           </div>
           <div
             className={`${style.botaoPreparar} ${
-              !ligada || agua < 100 || cafe < 100 ? style.desativado : ''
+              !ligada || agua < 100 || cafe < 100 ? style.desativado : ""
             }`}
             onClick={prepararCafe}
           >
             Preparar Café
           </div>
+          <div
+            className={`${style.alavanca} ${
+              !cafePronto ? style.desativado : ""
+            }`}
+            onClick={servirCafe}
+          >
+            <div className={style.tracoHorizontal}></div>
+            <div className={style.tracoVertical}></div>
+          </div>
         </div>
         <div
-          className={`${style.botaoLimpar} ${!ligada ? style.desativado : ''}`}
+          className={`${style.botaoLimpar} ${!ligada ? style.desativado : ""}`}
           onClick={limpar}
         >
           Limpar
         </div>
       </div>
       <button
-        className={`${style.botaoLigar} ${ligada ? style.ligado : ''}`}
+        className={`${style.botaoLigar} ${ligada ? style.ligado : ""}`}
         onClick={ligarDesligar}
       >
-        {ligada ? 'ON' : 'OFF'}
+        {ligada ? "ON" : "OFF"}
       </button>
     </div>
   );

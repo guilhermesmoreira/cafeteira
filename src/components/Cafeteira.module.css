@@ -162,7 +162,7 @@
 .botaoCafe {
   width: 60px;
   height: 60px;
-  background-color: #8b4513; /* Marrom para adicionar café */
+  background-color: #000000; /* Preto para adicionar café */
   border-radius: 10px;
   cursor: pointer;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
@@ -225,4 +225,54 @@
 
 .botaoLigar.ligado {
   background-color: #32cd32; /* Verde quando ligado */
+}
+
+.botaoTorneira{
+  width: 60px;
+  height: 60px;
+  background-color: #a9a9a9; /* Cinza para a torneirinha */
+  border-radius: 10px;
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 24px;
+  transition: background-color 0.3s ease; /* Transição suave de cor */
+}
+
+.botaoTorneira.desativado {
+  background-color: #d3d3d3; /* Cinza claro quando desativado */
+  cursor: not-allowed; /* Cursor de não permitido */
+}
+
+.alavanca {
+  position: relative;
+  width: 30px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.tracoHorizontal {
+  position: absolute;
+  width: 60px;
+  height: 20px;
+  background-color: red;  
+  top: 0;
+}
+
+.tracoVertical {
+  position: relative;
+  width: 20px;
+  height: 50px;
+  background-color: red;  
+  bottom: 0;
+}
+
+.desativado {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
