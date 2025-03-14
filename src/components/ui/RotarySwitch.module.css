@@ -1,0 +1,39 @@
+.switchContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 1rem;
+  }
+  
+  .knob {
+    width: 60px;
+    height: 60px;
+    background-color: #333;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.3s ease-in-out;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  }
+  
+  .knob:hover {
+    background-color: #444;
+  }
+  
+  .knob.rotated {
+    transform: rotate(180deg);
+  }
+  
+  .label {
+    font-size: 24px;
+    color: white;
+  }
+  
+  .modoTexto {
+    margin-top: 0.5rem;
+    font-size: 1rem;
+    font-weight: bold;
+  }
+  

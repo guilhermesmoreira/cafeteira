@@ -1,0 +1,163 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 2rem;
+    background-color: #f8f9fa;
+    min-height: 100vh;
+  }
+  
+  .card {
+    width: 320px;
+    padding: 1rem;
+    text-align: center;
+    border-radius: 8px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    background: white;
+  }
+  
+  .button {
+    margin-top: 1rem;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+  
+  .button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+  
+  .switchContainer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 1rem;
+  }
+  
+  .progressContainer {
+    margin-top: 1rem;
+  }
+  
+  .alert {
+    padding: 0.75rem;
+    border-radius: 5px;
+    font-weight: bold;
+  }
+  
+  .alert.success {
+    background-color: #d4edda;
+    color: #155724;
+  }
+  
+  .alert.info {
+    background-color: #d1ecf1;
+    color: #0c5460;
+  }
+  
+  .alert.warning {
+    background-color: #fff3cd;
+    color: #856404;
+  }
+
+  .selectorContainer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 1rem;
+  }
+  
+  .selectorLabel {
+    font-weight: bold;
+    margin-right: 0.5rem;
+  }
+  
+  .selector {
+    padding: 0.5rem;
+    font-size: 1rem;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    cursor: pointer;
+    background-color: white;
+    transition: 0.3s;
+  }
+  
+  .selector:hover {
+    border-color: #007bff;
+  }
+
+  .led {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin: 10px;
+    transition: background-color 0.3s ease; /* Transição suave de cor */
+  }
+  
+  .led-green {
+    background-color: green;
+  }
+  
+  .led-yellow {
+    background-color: yellow;
+  }
+  
+  .led-blue {
+    background-color: blue;
+  }
+  
+  .led-red {
+    background-color: red;
+  }
+  
+  .led-gray {
+    background-color: gray;
+  }
+
+  .guide {
+    margin-top: 20px;
+    text-align: center;
+  }
+  
+  .guideText {
+    font-size: 1rem;
+    color: #333;
+  }
+  
+  .guideAnimation {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-top: 10px;
+    background-color: #007bff;
+    animation: guidePulse 2s infinite;
+  }
+  
+  @keyframes guidePulse {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.2);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+  
+  .alert {
+    padding: 0.75rem;
+    border-radius: 5px;
+    font-weight: bold;
+  }
+  
+  .alert.warning {
+    background-color: #fff3cd;
+    color: #856404;
+  }
+  
+  
