@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
-import styles from "../paginas/cafeteira3.module.css";
-import { Card, CardContent } from "../components/ui/card";
-import { Progress } from "../components/ui/progress";
-import { Alert } from "../components/ui/alert";
-import RotarySwitch from "../components/ui/RotarySwitch";
-import PowerButton from "../components/ui/PowerButton";
-import TouchPanel from "../components/ui/TouchPanel";
+import styles from "../../paginas/cafeteira3/cafeteira3.module.css";
+import { Card, CardContent } from "../../components/ui/card";
+import { Progress } from "../../components/ui/progress";
+import { Alert } from "../../components/ui/alert";
+import RotarySwitch from "../../components/ui/RotarySwitch";
+import PowerButton from "../../components/ui/PowerButton";
+import TouchPanel from "../../components/ui/TouchPanel";
 
 const LEDIndicator = ({ status }) => {
   const getLEDColor = (status) => {
