@@ -5,6 +5,7 @@ import beepSound from '../../assets/beep.mp3';
 import coffeeReadySound from '../../assets/somCafePronto.wav';
 import cleanSound from '../../assets/somLimpar.wav';
 
+
 function PowerButton({ isOn, setIsOn }) {
   return (
     <button
@@ -112,6 +113,7 @@ function Cafeteira2() {
   const [cleaningProgress, setCleaningProgress] = useState(0);
   const [waterAdded, setWaterAdded] = useState(false);
   const [coffeeAdded, setCoffeeAdded] = useState(false);
+  const [isVibrating, setIsVibrating] = useState(false);
 
   // Instâncias de áudio
   const beep = new Audio(beepSound);
@@ -130,6 +132,8 @@ function Cafeteira2() {
     if (brewedCoffeeLevel === 100 && status !== 'pronto') {
       setStatus('pronto');
       coffeeReady.play(); // Toca somCafePronto.wav quando a barra marrom atinge 100%
+      setIsVibrating(true); // Ativa a vibração
+      setTimeout(() => setIsVibrating(false), 500); // Desativa após 0,5 segundos
     }
   }, [brewedCoffeeLevel, status]);
 
@@ -232,7 +236,7 @@ function Cafeteira2() {
   };
 
   return (
-    <div className={styles.coffeeMakerContainer}>
+    <div className={`${styles.coffeeMakerContainer} ${isVibrating ? styles.vibrateEffect : ''}`}>
       <div className={styles.coffeeMaker}>
         <div className={styles.topBar}>
           <PowerButton isOn={isOn} setIsOn={setIsOn} />
