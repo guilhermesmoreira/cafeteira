@@ -3,29 +3,29 @@ import style from "./Cafeteira.module.css"; // Importando o CSS Module
 import somCafePronto from '../../assets/somCafePronto.wav';
 import somLimpar from '../../assets/somLimpar.wav';
 
-
 const Cafeteira = () => {
   const [agua, setAgua] = useState(0);
-  const [cafe, setCafe] = useState(0); // Estado para controlar o nível de café
+  const [cafe, setCafe] = useState(0);
   const [ligada, setLigada] = useState(false);
-  const [preenchendoAgua, setPreenchendoAgua] = useState(false); // Estado para controlar o preenchimento da água
-  const [preenchendoCafe, setPreenchendoCafe] = useState(false); // Estado para controlar o preenchimento do café
-  const [cafePronto, setCafePronto] = useState(false); // Estado para controlar a mensagem "Café pronto!"
-  const [corAgua, setCorAgua] = useState("#00bfff"); // Estado para controlar a cor da água
-  const [mensagem, setMensagem] = useState(""); // Estado para controlar a mensagem
+  const [preenchendoAgua, setPreenchendoAgua] = useState(false);
+  const [preenchendoCafe, setPreenchendoCafe] = useState(false);
+  const [cafePronto, setCafePronto] = useState(false);
+  const [corAgua, setCorAgua] = useState("#00bfff");
+  const [mensagem, setMensagem] = useState("");
   const [cafeServido, setCafeServido] = useState(false);
+  const [isVibrating, setIsVibrating] = useState(false); // Novo estado para vibração
 
   // Lógica de preenchimento automático da água
   useEffect(() => {
     let intervalo;
     if (preenchendoAgua && agua < 100) {
       intervalo = setInterval(() => {
-        setAgua((prevAgua) => prevAgua + 1); // Incrementa a água automaticamente
-      }, 100); // A cada 100ms (0.1s)
+        setAgua((prevAgua) => prevAgua + 1);
+      }, 100);
     } else if (agua >= 100) {
-      setPreenchendoAgua(false); // Para o preenchimento ao atingir 100%
+      setPreenchendoAgua(false);
     }
-    return () => clearInterval(intervalo); // Limpa o intervalo ao desmontar o componente
+    return () => clearInterval(intervalo);
   }, [preenchendoAgua, agua]);
 
   // Lógica de preenchimento automático do café
@@ -33,27 +33,26 @@ const Cafeteira = () => {
     let intervalo;
     if (preenchendoCafe && cafe < 100) {
       intervalo = setInterval(() => {
-        setCafe((prevCafe) => prevCafe + 1); // Incrementa o café automaticamente
-      }, 100); // A cada 100ms (0.1s)
+        setCafe((prevCafe) => prevCafe + 1);
+      }, 100);
     } else if (cafe >= 100) {
-      setPreenchendoCafe(false); // Para o preenchimento ao atingir 100%
+      setPreenchendoCafe(false);
     }
-    return () => clearInterval(intervalo); // Limpa o intervalo ao desmontar o componente
+    return () => clearInterval(intervalo);
   }, [preenchendoCafe, cafe]);
 
-  // Lógica para mudança de cor da água e mensagem
+  // Lógica para mudança de cor da água, mensagem e vibração
   useEffect(() => {
     if (cafePronto) {
-      setMensagem("Preparando Café..."); // Mensagem durante a transição
+      setMensagem("Preparando Café...");
 
-      const inicio = Date.now(); // Tempo inicial
-      const duracao = 4000; // Duração da transição em milissegundos (4 segundos)
+      const inicio = Date.now();
+      const duracao = 4000;
 
       const intervalo = setInterval(() => {
-        const tempoDecorrido = Date.now() - inicio; // Tempo decorrido desde o início
-        const progresso = Math.min(tempoDecorrido / duracao, 1); // Progresso de 0 a 1
+        const tempoDecorrido = Date.now() - inicio;
+        const progresso = Math.min(tempoDecorrido / duracao, 1);
 
-        // Interpolação entre azul (#00bfff) e marrom (#8b4513)
         const azul = [0, 191, 255];
         const marrom = [139, 69, 19];
         const novaCor = azul.map((valor, index) =>
@@ -61,18 +60,19 @@ const Cafeteira = () => {
         );
         setCorAgua(`rgb(${novaCor.join(",")})`);
 
-        // Finaliza a transição após 4 segundos
         if (progresso >= 1) {
           clearInterval(intervalo);
-          setMensagem("Café Pronto!"); // Mensagem final
+          setMensagem("Café Pronto!");
           tocarSom(somCafePronto);
+          setIsVibrating(true); // Ativa a vibração
+          setTimeout(() => setIsVibrating(false), 500); // Desativa após 0,5 segundos
         }
-      }, 50); // Atualiza a cor a cada 50ms
+      }, 50);
 
-      return () => clearInterval(intervalo); // Limpa o intervalo ao desmontar o componente
+      return () => clearInterval(intervalo);
     } else {
-      setCorAgua("#00bfff"); // Volta para azul se o café não estiver pronto
-      setMensagem(""); // Limpa a mensagem
+      setCorAgua("#00bfff");
+      setMensagem("");
     }
   }, [cafePronto]);
 
@@ -80,7 +80,7 @@ const Cafeteira = () => {
     if (ligada) {
       if (agua === 0 && cafe === 0) {
         setLigada(false);
-        setCafePronto(false); // Reseta a mensagem "Café pronto!" ao desligar
+        setCafePronto(false);
       } else {
         setMensagem("Limpe a máquina antes de desligar!");
       }
@@ -96,30 +96,30 @@ const Cafeteira = () => {
       setCafe(0);
       setPreenchendoAgua(false);
       setPreenchendoCafe(false);
-      setCafePronto(false); // Reseta a mensagem "Café pronto!" ao limpar
+      setCafePronto(false);
     }
   };
 
   const adicionarAgua = () => {
     if (ligada) {
-      setPreenchendoAgua(!preenchendoAgua); // Pausa/continua o preenchimento da água
+      setPreenchendoAgua(!preenchendoAgua);
     }
   };
 
   const adicionarCafe = () => {
     if (ligada) {
-      setPreenchendoCafe(!preenchendoCafe); // Pausa/continua o preenchimento do café
+      setPreenchendoCafe(!preenchendoCafe);
     }
   };
 
   const prepararCafe = () => {
     if (ligada && agua === 100 && cafe === 100) {
-      setCafePronto(true); // Inicia a preparação do café
+      setCafePronto(true);
     }
   };
 
   const servirCafe = () => {
-    if (!cafePronto) return; // Impede a ação caso o café não esteja pronto
+    if (!cafePronto) return;
   
     setCafeServido(true);
     setMensagem('Café Servido!');
@@ -131,7 +131,7 @@ const Cafeteira = () => {
   };
 
   return (
-    <div className={style.cafeteira}>
+    <div className={`${style.cafeteira} ${isVibrating ? style.vibrateEffect : ''}`}>
       {/* Container do café */}
       <div className={style.containerCafe}>
         <div className={style.barraCafe} style={{ height: `${cafe}%` }}>
