@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import style from "./Cafeteira.module.css"; // Importando o CSS Module
-import somCafePronto from '../assets/somCafePronto.wav';
-import somLimpar from '../assets/somLimpar.wav';
+import somCafePronto from '../../assets/somCafePronto.wav';
+import somLimpar from '../../assets/somLimpar.wav';
 
 
 const Cafeteira = () => {
