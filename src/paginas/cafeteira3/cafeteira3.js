@@ -1,3 +1,4 @@
+// Atualizado Cafeteira3.js aplicando as melhorias (S1 a S12)
 import { useState, useEffect } from "react";
 import styles from "../../paginas/cafeteira3/cafeteira3.module.css";
 import { Card, CardContent } from "../../components/ui/card";
@@ -39,20 +40,35 @@ export default function Cafeteira3() {
   const [progresso, setProgresso] = useState(0);
   const [status, setStatus] = useState("Pronto");
   const [necessitaLimpeza, setNecessitaLimpeza] = useState(false);
-  const [intensidadeCafe, setIntensidadeCafe] = useState("Médio");
+  const [intensidadeCafe, setIntensidadeCafe] = useState(3);
+  const [temperatura, setTemperatura] = useState(92);
+  const [tempoExtracao, setTempoExtracao] = useState(25);
+  const [mostrarTempoModal, setMostrarTempoModal] = useState(false);
+  const [volume, setVolume] = useState(200);
+  const [somAtivo, setSomAtivo] = useState(true);
+  const [vibracaoAtiva, setVibracaoAtiva] = useState(true);
+  const [alerta, setAlerta] = useState(null);
 
   const playSound = (soundFile) => {
+    if (!somAtivo) return;
     const sound = new Audio(`/sounds/${soundFile}`);
     sound.play();
+  };
+
+  const vibrar = (tipo) => {
+    if (!vibracaoAtiva) return;
+    navigator.vibrate(tipo === "curto" ? 100 : 400);
   };
 
   useEffect(() => {
     if (agua < 20) {
       setStatus("Baixo Nível de Água");
       playSound("beep.mp3");
+      vibrar("curto");
     } else if (necessitaLimpeza) {
       setStatus("Necessita Limpeza");
       playSound("beep.mp3");
+      vibrar("curto");
     } else {
       setStatus("Pronto");
     }
@@ -60,32 +76,47 @@ export default function Cafeteira3() {
 
   const iniciar = () => {
     if (!ligada) return;
-    setProgresso(100);
+    setProgresso(0);
+    let interval = setInterval(() => {
+      setProgresso((prev) => {
+        if (prev >= 100) {
+          clearInterval(interval);
+          setStatus("Pronto");
+          playSound(modo === "preparo" ? "somCafePronto.wav" : "somLimpar.wav");
+          vibrar("longo");
+          setNecessitaLimpeza(modo === "preparo");
+          return 100;
+        }
+        return prev + 1;
+      });
+    }, 30);
 
     if (modo === "preparo") {
       setStatus("Preparando Café");
       playSound("beep.mp3");
-      setTimeout(() => {
-        setStatus("Pronto");
-        playSound("somCafePronto.wav");
-      }, 3000);
     } else {
       setStatus("Limpando Máquina");
       playSound("beep.mp3");
-      setTimeout(() => {
-        setStatus("Pronto");
-        playSound("somLimpar.wav");
-      }, 3000);
     }
   };
 
   const ligarOuDesligar = () => {
     setLigada((prev) => !prev);
     playSound("beep.mp3");
+    vibrar("curto");
   };
 
-  const alterarIntensidade = (novaIntensidade) => {
-    setIntensidadeCafe(novaIntensidade);
+  const abrirModalTempo = () => {
+    setMostrarTempoModal(true);
+  };
+
+  const confirmarTempo = () => {
+    setMostrarTempoModal(false);
+    playSound("beep.mp3");
+  };
+
+  const alterarVolume = (e) => {
+    setVolume(e.target.value);
     playSound("beep.mp3");
   };
 
@@ -94,57 +125,93 @@ export default function Cafeteira3() {
       <Card className={styles.card}>
         <CardContent>
           <h2 className="text-xl font-bold">Cafeteira Inteligente</h2>
-          
+
+          <div className={styles.statusBar}>
+            <span>Status: {status}</span>
+            <LEDIndicator status={status} />
+          </div>
+
           <button onClick={ligarOuDesligar} className={styles.button}>
             {ligada ? "Desligar" : "Ligar"}
           </button>
-          
+
+          <div className={styles.temperaturaSection}>
+            <label>Temperatura: {temperatura}°C</label>
+            <input
+              type="range"
+              min="85"
+              max="100"
+              value={temperatura}
+              onChange={(e) => setTemperatura(e.target.value)}
+            />
+          </div>
+
           <RotarySwitch onChange={setModo} />
-          <TouchPanel onCleanMode={() => setModo("limpeza")} />
-          <LEDIndicator status={status} />
-          
-          <div>
-            <p>Intensidade do Café: {intensidadeCafe}</p>
-            <button onClick={() => alterarIntensidade("Fraco")}>
-              Fraco
-            </button>
-            <button onClick={() => alterarIntensidade("Médio")}>
-              Médio
-            </button>
-            <button onClick={() => alterarIntensidade("Forte")}>
-              Forte
-            </button>
+          <TouchPanel onConfigChange={() => {}} onCleanMode={() => setModo("limpeza")} />
+
+          <div className={styles.volumeSection}>
+            <label>Volume no Recipiente: {volume}ml</label>
+            <input
+              type="range"
+              min="100"
+              max="500"
+              value={volume}
+              onChange={alterarVolume}
+            />
           </div>
 
           {status === "Preparando Café" && (
-            <div>
-              <p>Aquecendo a água...</p>
+            <>
+              <p>Tempo de Extração: {tempoExtracao} segundos</p>
               <Progress value={progresso} />
-            </div>
+            </>
           )}
 
           {status === "Limpando Máquina" && (
-            <div>
-              <p>Iniciando limpeza...</p>
+            <>
+              <p>Realizando limpeza...</p>
               <Progress value={progresso} />
-            </div>
+            </>
           )}
 
-          {status === "Baixo Nível de Água" && (
-            <Alert className={`${styles.alert} ${styles.warning}`}>
-              Atenção: Nível de água baixo!
-            </Alert>
-          )}
-
-          {status === "Necessita Limpeza" && (
-            <Alert className={`${styles.alert} ${styles.warning}`}>
-              Atenção: A cafeteira precisa de limpeza!
-            </Alert>
+          {alerta && (
+            <Alert type={alerta.type} message={alerta.message} />
           )}
 
           <button className={styles.button} onClick={iniciar} disabled={!ligada}>
             Iniciar {modo === "preparo" ? "Preparo" : "Limpeza"}
           </button>
+
+          <button className={styles.button} onClick={abrirModalTempo}>
+            Ajustar Tempo de Extração
+          </button>
+
+          {mostrarTempoModal && (
+            <div className={styles.modal}>
+              <div className={styles.modalContent}>
+                <h3>Tempo de Extração</h3>
+                <input
+                  type="number"
+                  value={tempoExtracao}
+                  min="10"
+                  max="60"
+                  onChange={(e) => setTempoExtracao(e.target.value)}
+                />
+                <button onClick={confirmarTempo} className={styles.button}>
+                  Pronto
+                </button>
+              </div>
+            </div>
+          )}
+
+          <div className={styles.configSection}>
+            <label>
+              Sons: <input type="checkbox" checked={somAtivo} onChange={() => setSomAtivo(!somAtivo)} />
+            </label>
+            <label>
+              Vibração: <input type="checkbox" checked={vibracaoAtiva} onChange={() => setVibracaoAtiva(!vibracaoAtiva)} />
+            </label>
+          </div>
         </CardContent>
       </Card>
     </div>

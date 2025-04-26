@@ -114,24 +114,60 @@ function Cafeteira2() {
   const [waterAdded, setWaterAdded] = useState(false);
   const [coffeeAdded, setCoffeeAdded] = useState(false);
   const [isVibrating, setIsVibrating] = useState(false);
+  const [temperatura, setTemperatura] = useState(92);
+  const [tempoExtracao, setTempoExtracao] = useState(25); // 25 segundos padrão
+  const [mostrarModalTempo, setMostrarModalTempo] = useState(false);
+  const [tempoPreparoRestante, setTempoPreparoRestante] = useState(0);
+  const [vibracaoAtiva, setVibracaoAtiva] = useState(true);
+  const [somAtivo, setSomAtivo] = useState(true);
+
+  const tocarSom = (audio) => {
+    if (!somAtivo) return;
+    audio.currentTime = 0; // reinicia o som para cada evento
+    audio.play();
+  };
 
   // Instâncias de áudio
   const beep = new Audio(beepSound);
   const coffeeReady = new Audio(coffeeReadySound);
   const clean = new Audio(cleanSound);
 
+  const alterarTemperatura = (e) => {
+    setTemperatura(e.target.value);
+  };
+
+  const abrirModalTempo = () => {
+    setMostrarModalTempo(true);
+  };
+
+  const confirmarTempo = () => {
+    setMostrarModalTempo(false);
+  };
+
+  const vibrar = (tipo) => {
+    if (!vibracaoAtiva || !navigator.vibrate) return;
+
+    if (tipo === 'curto') {
+      navigator.vibrate(100); // vibração de 100ms
+    } else if (tipo === 'longo') {
+      navigator.vibrate(400); // vibração de 400ms
+    }
+  };
+
+
   // Toca beep.mp3 ao ligar a máquina
   useEffect(() => {
     if (isOn) {
-      beep.play();
+      tocarSom(beep);
     }
   }, [isOn]);
+
 
   // Controle de status para café pronto (somCafePronto.wav)
   useEffect(() => {
     if (brewedCoffeeLevel === 100 && status !== 'pronto') {
       setStatus('pronto');
-      coffeeReady.play(); // Toca somCafePronto.wav quando a barra marrom atinge 100%
+      tocarSom(coffeeReady); // Toca somCafePronto.wav quando a barra marrom atinge 100%
       setIsVibrating(true); // Ativa a vibração
       setTimeout(() => setIsVibrating(false), 500); // Desativa após 0,5 segundos
     }
@@ -140,12 +176,13 @@ function Cafeteira2() {
   // Toca somLimpar.wav quando a limpeza termina
   useEffect(() => {
     if (mode === 'limpeza' && cleaningProgress === 100 && status === 'aguardando') {
-      clean.play();
+      tocarSom(clean);
     }
   }, [cleaningProgress, status, mode]);
 
   const addWater = () => {
     if (isOn && mode === 'preparo' && waterLevel < 100 && !waterAdded) {
+      tocarSom(beep);
       setStatus('preparando');
       setWaterAdded(true);
       const interval = setInterval(() => {
@@ -189,21 +226,35 @@ function Cafeteira2() {
   const brewCoffee = () => {
     if (isOn && mode === 'preparo' && waterLevel === 100 && coffeeLevel === 100) {
       setStatus('preparando');
+
+      let segundosTotal = parseInt(tempoExtracao); // valor escolhido pelo usuário
+      let progressoAtual = 0;
+
+      setTempoPreparoRestante(segundosTotal); // Iniciar contagem regressiva
       const interval = setInterval(() => {
         setBrewedCoffeeLevel((prevBrew) => {
-          if (prevBrew >= 100) {
+          const novoProgresso = prevBrew + (100 / segundosTotal / 10); // atualizar proporcionalmente
+
+          // A cada 100ms -> atualizar 1/10 do segundo
+
+          if (novoProgresso >= 100) {
             clearInterval(interval);
             setStatus('pronto');
+            setTempoPreparoRestante(0); // zera o tempo restante
             return 100;
           }
-          const newBrew = prevBrew + 1;
-          setWaterLevel(100 - newBrew);
-          setCoffeeLevel(100 - newBrew);
-          return newBrew;
+
+          return novoProgresso;
         });
-      }, 50);
+
+        setTempoPreparoRestante((prevTempo) => {
+          if (prevTempo <= 0) return 0;
+          return (prevTempo - 0.1).toFixed(1); // diminui 0.1s a cada 100ms
+        });
+      }, 100); // a cada 100 milissegundos
     }
   };
+
 
   const cleanMachine = () => {
     if (isOn && mode === 'limpeza' && brewedCoffeeLevel > 0) {
@@ -254,6 +305,38 @@ function Cafeteira2() {
             coffeeLevel={coffeeLevel}
             brewedCoffeeLevel={brewedCoffeeLevel}
           />
+          <p>Tempo de Preparo: {tempoPreparoRestante > 0 ? `${tempoPreparoRestante}s` : "0s"}</p>
+          <div className={styles.temperaturaControl}>
+            <label>Temperatura Inicial da Água: {temperatura}°C</label>
+            <input
+              type="range"
+              min="85"
+              max="100"
+              value={temperatura}
+              onChange={alterarTemperatura}
+              className={styles.sliderTemperatura}
+            />
+          </div>
+          <button className={styles.button} onClick={abrirModalTempo}>
+            Ajustar Tempo de Extração
+          </button>
+          {mostrarModalTempo && (
+            <div className={styles.modal}>
+              <div className={styles.modalContent}>
+                <h3>Tempo de Extração</h3>
+                <input
+                  type="number"
+                  value={tempoExtracao}
+                  min="10"
+                  max="60"
+                  onChange={(e) => setTempoExtracao(e.target.value)}
+                />
+                <button onClick={confirmarTempo} className={styles.button}>
+                  Pronto
+                </button>
+              </div>
+            </div>
+          )}
           <div className={styles.actionButtonsContainer}>
             <div className={styles.buttonColumn}>
               <button
@@ -289,9 +372,38 @@ function Cafeteira2() {
             </div>
           </div>
         </div>
+        <div className={styles.configSection}>
+          <label>
+            Sons: <input type="checkbox" checked={somAtivo} onChange={() => setSomAtivo(!somAtivo)} />
+          </label>
+        </div>
+        <div className={styles.configSection}>
+          <label>
+            Vibração: <input type="checkbox" checked={vibracaoAtiva} onChange={() => setVibracaoAtiva(!vibracaoAtiva)} />
+          </label>
+        </div>
         <WaterLevelBar waterLevel={waterLevel} />
+        <div className={styles.temperatureLevelContainer}>
+          <div
+            className={styles.temperatureLevel}
+            style={{ height: `${(temperatura - 85) * 6.66}%` }} // mapeando 85-100 para 0-100%
+          ></div>
+          <div className={styles.temperatureText}>
+            {temperatura}°C
+          </div>
+        </div>
         <CoffeeLevelBar coffeeLevel={coffeeLevel} />
         <BrewedCoffeeBar brewedCoffeeLevel={brewedCoffeeLevel} />
+        <div className={styles.volumeRecipienteContainer}>
+          <div className={styles.volumeRecipienteBar}>
+            <div
+              className={styles.volumeRecipienteFill}
+              style={{ width: `${brewedCoffeeLevel}%` }}
+            ></div>
+          </div>
+          <p>{Math.round((brewedCoffeeLevel / 100) * 500)} ml</p>
+        </div>
+
       </div>
     </div>
   );
