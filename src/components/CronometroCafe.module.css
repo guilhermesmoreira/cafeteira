@@ -1,0 +1,65 @@
+.cronometroContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 10px 0;
+  }
+  
+  .relogio {
+    position: relative;
+    width: 150px;
+    height: 150px;
+    border: 6px solid #999;
+    border-radius: 50%;
+    background-color: #f0f0f0;
+  }
+  
+  .numeroCentral {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 22px;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .ponteiroMinuto, .ponteiroSegundo {
+    position: absolute;
+    bottom: 50%;
+    left: 50%;
+    transform-origin: bottom center;
+    background-color: #000;
+  }
+  
+  .ponteiroMinuto {
+    width: 4px;
+    height: 40px;
+    background-color: #444;
+  }
+  
+  .ponteiroSegundo {
+    width: 2px;
+    height: 60px;
+    background-color: red;
+  }
+  
+  .marcadores {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 150px;
+    height: 150px;
+    pointer-events: none;
+  }
+  
+  .marcador {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 2px;
+    height: 8px;
+    background-color: #333;
+    transform-origin: bottom center;
+  }
+  

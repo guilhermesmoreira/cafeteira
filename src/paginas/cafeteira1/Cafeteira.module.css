@@ -1,7 +1,7 @@
 .cafeteira {
   position: relative;
   width: 300px;
-  height: 500px;
+  height: 800px;
   margin: 50px auto;
   background-color: #d3d3d3;
   border-radius: 20px;
@@ -88,7 +88,7 @@
   transform: translateX(-50%);
   bottom: 20px;
   width: 200px;
-  height: 300px;
+  height: 650px;
   background-color: #808080;
   border-radius: 20px;
   display: flex;
@@ -288,4 +288,23 @@
 
 .vibrateEffect {
   animation: vibrate 0.5s ease-in-out;
+}
+
+.temperaturaAtual {
+  font-size: 14px;
+  color: white;
+  font-weight: bold;
+  margin-top: 8px;
+  text-align: center;
+}
+
+.secaoControle {
+  width: 100%;
+  background-color: #6e6e6e;
+  padding: 10px;
+  border-radius: 12px;
+  margin-bottom: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }

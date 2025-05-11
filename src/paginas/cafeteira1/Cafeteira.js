@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
-import style from "./Cafeteira.module.css"; // Importando o CSS Module
+import style from "./Cafeteira.module.css";
 import somCafePronto from '../../assets/somCafePronto.wav';
 import somLimpar from '../../assets/somLimpar.wav';
+import SliderTemperatura from "../../components/SliderTemperatura";
+import CronometroCafe from "../../components/CronometroCafe";
 
 const Cafeteira = () => {
   const [agua, setAgua] = useState(0);
@@ -13,14 +15,15 @@ const Cafeteira = () => {
   const [corAgua, setCorAgua] = useState("#00bfff");
   const [mensagem, setMensagem] = useState("");
   const [cafeServido, setCafeServido] = useState(false);
-  const [isVibrating, setIsVibrating] = useState(false); // Novo estado para vibração
+  const [isVibrating, setIsVibrating] = useState(false);
+  const [temperatura, setTemperatura] = useState(90);
+  const [tempoCronometro, setTempoCronometro] = useState(0);
 
-  // Lógica de preenchimento automático da água
   useEffect(() => {
     let intervalo;
     if (preenchendoAgua && agua < 100) {
       intervalo = setInterval(() => {
-        setAgua((prevAgua) => prevAgua + 1);
+        setAgua((prev) => prev + 1);
       }, 100);
     } else if (agua >= 100) {
       setPreenchendoAgua(false);
@@ -28,12 +31,11 @@ const Cafeteira = () => {
     return () => clearInterval(intervalo);
   }, [preenchendoAgua, agua]);
 
-  // Lógica de preenchimento automático do café
   useEffect(() => {
     let intervalo;
     if (preenchendoCafe && cafe < 100) {
       intervalo = setInterval(() => {
-        setCafe((prevCafe) => prevCafe + 1);
+        setCafe((prev) => prev + 1);
       }, 100);
     } else if (cafe >= 100) {
       setPreenchendoCafe(false);
@@ -41,13 +43,12 @@ const Cafeteira = () => {
     return () => clearInterval(intervalo);
   }, [preenchendoCafe, cafe]);
 
-  // Lógica para mudança de cor da água, mensagem e vibração
   useEffect(() => {
     if (cafePronto) {
       setMensagem("Preparando Café...");
 
       const inicio = Date.now();
-      const duracao = 4000;
+      const duracao = (15 - (temperatura - 85)) * 1000;
 
       const intervalo = setInterval(() => {
         const tempoDecorrido = Date.now() - inicio;
@@ -64,8 +65,8 @@ const Cafeteira = () => {
           clearInterval(intervalo);
           setMensagem("Café Pronto!");
           tocarSom(somCafePronto);
-          setIsVibrating(true); // Ativa a vibração
-          setTimeout(() => setIsVibrating(false), 500); // Desativa após 0,5 segundos
+          setIsVibrating(true);
+          setTimeout(() => setIsVibrating(false), 500);
         }
       }, 50);
 
@@ -74,7 +75,7 @@ const Cafeteira = () => {
       setCorAgua("#00bfff");
       setMensagem("");
     }
-  }, [cafePronto]);
+  }, [cafePronto, temperatura]);
 
   const ligarDesligar = () => {
     if (ligada) {
@@ -114,13 +115,14 @@ const Cafeteira = () => {
 
   const prepararCafe = () => {
     if (ligada && agua === 100 && cafe === 100) {
+      const duracaoSegundos = 15 - (temperatura - 85);
+      setTempoCronometro(duracaoSegundos);
       setCafePronto(true);
     }
   };
 
   const servirCafe = () => {
     if (!cafePronto) return;
-  
     setCafeServido(true);
     setMensagem('Café Servido!');
   };
@@ -130,14 +132,16 @@ const Cafeteira = () => {
     audio.play();
   };
 
+
+
   return (
     <div className={`${style.cafeteira} ${isVibrating ? style.vibrateEffect : ''}`}>
-      {/* Container do café */}
       <div className={style.containerCafe}>
         <div className={style.barraCafe} style={{ height: `${cafe}%` }}>
           <span className={style.porcentagem}>{cafe}%</span>
         </div>
       </div>
+
       {mensagem && <div className={style.mensagem}>{mensagem}</div>}
 
       <div className={style.base}>
@@ -148,51 +152,55 @@ const Cafeteira = () => {
           <span className={style.porcentagem}>{agua}%</span>
         </div>
       </div>
+
       <div className={style.corpo}>
+        <div className={style.secaoControle}>
+          <SliderTemperatura temperatura={temperatura} setTemperatura={setTemperatura} />
+          {cafePronto && tempoCronometro > 0 && (
+            <CronometroCafe tempoTotal={tempoCronometro} />
+          )}
+          <div className={style.temperaturaAtual}>
+            Temp. atual da água: {temperatura}°C ({Math.round(temperatura * 9 / 5 + 32)}°F)
+          </div>
+        </div>
+
         <div className={style.botoes}>
           <div className={style.botoesSuperiores}>
             <div
-              className={`${style.botaoAgua} ${
-                !ligada ? style.desativado : ""
-              }`}
+              className={`${style.botaoAgua} ${!ligada ? style.desativado : ""}`}
               onClick={adicionarAgua}
             >
               {preenchendoAgua ? "Pausar" : "Água"}
             </div>
             <div
-              className={`${style.botaoCafe} ${
-                !ligada ? style.desativado : ""
-              }`}
+              className={`${style.botaoCafe} ${!ligada ? style.desativado : ""}`}
               onClick={adicionarCafe}
             >
               {preenchendoCafe ? "Pausar" : "Café"}
             </div>
           </div>
+
           <div
-            className={`${style.botaoPreparar} ${
-              !ligada || agua < 100 || cafe < 100 ? style.desativado : ""
-            }`}
+            className={`${style.botaoPreparar} ${(!ligada || agua < 100 || cafe < 100) ? style.desativado : ""}`}
             onClick={prepararCafe}
           >
             Preparar Café
           </div>
+
           <div
-            className={`${style.alavanca} ${
-              !cafePronto ? style.desativado : ""
-            }`}
+            className={`${style.alavanca} ${!cafePronto ? style.desativado : ""}`}
             onClick={servirCafe}
           >
             <div className={style.tracoHorizontal}></div>
             <div className={style.tracoVertical}></div>
           </div>
         </div>
-        <div
-          className={`${style.botaoLimpar} ${!ligada ? style.desativado : ""}`}
-          onClick={limpar}
-        >
+
+        <div className={`${style.botaoLimpar} ${!ligada ? style.desativado : ""}`} onClick={limpar}>
           Limpar
         </div>
       </div>
+
       <button
         className={`${style.botaoLigar} ${ligada ? style.ligado : ""}`}
         onClick={ligarDesligar}
