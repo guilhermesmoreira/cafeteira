@@ -1,0 +1,82 @@
+.cafeteira {
+  width: 360px;
+  margin: 40px auto;
+  padding: 20px;
+  border-radius: 20px;
+  background-color: #f8f8f8;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+  font-family: sans-serif;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.acessivel {
+  background-color: #000;
+  color: #fff;
+  font-size: 18px;
+}
+
+.titulo {
+  margin-bottom: 10px;
+}
+
+.display {
+  background: #222;
+  color: #0f0;
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+.perfis {
+  margin-top: 10px;
+}
+
+.perfis button {
+  margin: 5px;
+  padding: 5px 10px;
+  font-size: 14px;
+  border: none;
+  border-radius: 6px;
+  background-color: #555;
+  color: white;
+  cursor: pointer;
+}
+
+.botoes button {
+  margin: 8px;
+  padding: 10px 20px;
+  font-size: 15px;
+  border: none;
+  border-radius: 10px;
+  background-color: #444;
+  color: white;
+  cursor: pointer;
+}
+
+.botoes button:hover {
+  background-color: #666;
+}
+
+.niveis {
+  margin-top: 20px;
+  text-align: left;
+}
+
+.barra {
+  background-color: #ccc;
+  border-radius: 6px;
+  overflow: hidden;
+  height: 14px;
+  margin-bottom: 10px;
+}
+
+.agua {
+  background-color: #00f;
+  height: 100%;
+}
+
+.borra {
+  background-color: #964B00;
+  height: 100%;
+}
