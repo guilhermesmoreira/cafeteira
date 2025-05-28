@@ -1,195 +1,159 @@
-import React, { useState, useEffect } from "react";
-import styles from "./cafeteira4.module.css";
+//Cafeteira somente eu.
 
-// Importação dos arquivos de áudio
+import React, { useState } from "react";
+import styles from "./cafeteira4.module.css";
 import beep from "../../assets/beep.mp3";
 import somCafePronto from "../../assets/somCafePronto.wav";
 import somLimpar from "../../assets/somLimpar.wav";
 
-// Configurações globais da cafeteira
-const CONFIG = {
-  INTERVALOS: 10, // Quantidade de intervalos para a barra de progresso
-  TEMPOS_PREPARO: {
-    fraco: 8, // Tempo em segundos para café fraco
-    medio: 10, // Tempo em segundos para café médio
-    forte: 12, // Tempo em segundos para café forte
-  },
-  TEMPO_LIMPEZA: 10, // Tempo em segundos para limpeza
-};
-
-// Componente principal da cafeteira virtual
 function Cafeteira4() {
-  // Estados para gerenciar o status da cafeteira, progresso, tempo restante e intensidade
-  const [statusDaCafeteira, setStatusDaCafeteira] = useState("idle");
-  const [progressoPreparo, setProgressoPreparo] = useState(0);
-  const [segundosRestantes, setSegundosRestantes] = useState(0);
-  const [intensidadeCafe, setIntensidadeCafe] = useState("medio"); // Intensidade padrão: médio
+  const [temp, setTemp] = useState(90);
+  const [unit, setUnit] = useState("C");
+  const [tempo, setTempo] = useState(5);
+  const [agua, setAgua] = useState(70);
+  const [cafe, setCafe] = useState(50);
+  const [estado, setEstado] = useState("Stand-by");
+  const [configOpen, setConfigOpen] = useState(false);
+  const [feedback, setFeedback] = useState(true);
+  const [uso, setUso] = useState(0); // Adicionando o estado 'uso'
 
-  // Instâncias de áudio para feedback sonoro
-  const audioCafePronto = new Audio(somCafePronto);
-  const audioLimpeza = new Audio(somLimpar);
+  const audioBeep = new Audio(beep);
+  const audioVibra = new Audio(somLimpar);
   const audioErro = new Audio(beep);
+  const audioCafePronto = new Audio(somCafePronto);
 
-  // Textos exibidos no display para cada estado
-  const mensagensDisplay = {
-    idle: "Aguardando comando...",
-    preparando: `Preparando café ${intensidadeCafe}...`,
-    pronto: "☕ Café pronto! Aproveite!",
-    limpando: "Limpando o sistema...",
-    erro: "Erro! Por favor, reinicie a cafeteira.",
-  };
-
-  // Função auxiliar para tocar som de erro e definir estado de erro
-  const dispararErro = () => {
-    audioErro.play();
-    setStatusDaCafeteira("erro");
-  };
-
-  // Função para iniciar o preparo do café
-  const handleIniciarPreparo = () => {
-    if (statusDaCafeteira === "idle" || statusDaCafeteira === "pronto") {
-      setStatusDaCafeteira("preparando");
-    } else {
-      dispararErro();
+  const playFeedback = () => {
+    if (feedback) {
+      audioBeep.play();
+      setTimeout(() => audioVibra.play(), 100);
     }
   };
 
-  // Função para iniciar o processo de limpeza
-  const handleIniciarLimpeza = () => {
-    if (statusDaCafeteira === "idle" || statusDaCafeteira === "pronto") {
-      setStatusDaCafeteira("limpando");
-      audioLimpeza.play();
-    } else {
-      dispararErro();
-    }
-  };
-
-  // Função para resetar a cafeteira
-  const handleResetar = () => {
-    setStatusDaCafeteira("idle");
-    setProgressoPreparo(0);
-    setSegundosRestantes(0);
-    setIntensidadeCafe("medio"); // Reseta para intensidade padrão
-  };
-
-  // Função para atualizar a intensidade do café
-  const handleMudarIntensidade = (event) => {
-    setIntensidadeCafe(event.target.value);
-  };
-
-  // Efeito para gerenciar o temporizador de preparo ou limpeza
-  useEffect(() => {
-    let temporizador;
-
-    if (statusDaCafeteira === "preparando" || statusDaCafeteira === "limpando") {
-      // Define o tempo total com base no estado
-      const tempoTotal = statusDaCafeteira === "preparando" 
-        ? CONFIG.TEMPOS_PREPARO[intensidadeCafe] 
-        : CONFIG.TEMPO_LIMPEZA;
-
-      // Inicializa progresso e tempo restante
-      setProgressoPreparo(0);
-      setSegundosRestantes(tempoTotal);
-
-      // Calcula o intervalo de atualização (em milissegundos)
-      const intervaloMs = (tempoTotal * 1000) / CONFIG.INTERVALOS;
-
-      temporizador = setInterval(() => {
-        setProgressoPreparo((progressoAtual) => {
-          const novoProgresso = progressoAtual + (100 / CONFIG.INTERVALOS);
-          if (novoProgresso >= 100) {
-            clearInterval(temporizador);
-            setStatusDaCafeteira("pronto");
-            if (statusDaCafeteira === "preparando") {
-              audioCafePronto.play();
-            }
-            return 100;
-          }
-          return novoProgresso;
-        });
-
-        setSegundosRestantes((segundos) => Math.max(0, segundos - 1));
-      }, intervaloMs);
+  const iniciar = () => {
+    if (agua < 20 || cafe < 20) {
+      audioErro.play();
+      alert("Erro: Pouca água ou pouco café.");
+      setEstado("Stand-by");
+      return;
     }
 
-    // Limpeza do temporizador ao desmontar o componente ou mudar o estado
-    return () => clearInterval(temporizador);
-  }, [statusDaCafeteira, intensidadeCafe]);
-
-  // Determina a classe CSS do indicador com base no status
-  const classeIndicador = () => {
-    switch (statusDaCafeteira) {
-      case "erro":
-        return styles.indicadorVermelho;
-      case "preparando":
-      case "limpando":
-        return styles.indicadorAzul;
-      case "pronto":
-        return styles.indicadorVerde;
-      default:
-        return "";
+    if (uso > 0 && uso % 3 === 0) {
+      setEstado("Necessário Limpeza");
+      alert("⚠️ Necessário realizar limpeza!");
+      return;
     }
+
+    setEstado("Aquecendo água");
+    playFeedback();
+
+    setTimeout(() => {
+      setEstado("Extraindo café");
+    }, 1500);
+
+    setTimeout(() => {
+      setEstado("Com café");
+      setUso((u) => u + 1); // Atualizando o estado 'uso'
+      audioCafePronto.play();
+    }, 5000);
   };
+
+  const tempDisplay = unit === "C" ? `${temp}°C` : `${Math.round(temp * 9 / 5 + 32)}°F`;
 
   return (
     <div className={styles.cafeteira}>
-      {/* Display da cafeteira */}
-      <div className={styles.display}>
-        <p>{mensagensDisplay[statusDaCafeteira]}</p>
-        {(statusDaCafeteira === "preparando" || statusDaCafeteira === "limpando") && (
-          <div className={styles.infoProgresso}>
-            <p>Progresso: {Math.round(progressoPreparo)}%</p>
-            <p>Tempo restante: {segundosRestantes}s</p>
+      <h2 className={styles.titulo}>Cafeteira Touch 4</h2>
+
+      <div className={styles.temperatura}>
+        <button onClick={() => setTemp(temp - 1)}>-</button>
+        <div className={styles.valorGrande}>{tempDisplay}</div>
+        <button onClick={() => setTemp(temp + 1)}>+</button>
+        <div className={styles.chave}>
+          <label>
+            <input
+              type="checkbox"
+              checked={unit === "F"}
+              onChange={() => setUnit(unit === "C" ? "F" : "C")}
+            />
+            {unit === "C" ? "°C" : "°F"}
+          </label>
+        </div>
+      </div>
+
+      <div className={styles.tempo}>
+        <div className={styles.relogio}>
+          <div className={styles.circulo}>
+            <div
+              className={styles.ponteiro}
+              style={{ transform: `rotate(${tempo * 6}deg)` }}
+            />
+            <div className={styles.numeroTempo}>{tempo}s</div>
           </div>
-        )}
+        </div>
+        <input
+          type="range"
+          min="1"
+          max="60"
+          value={tempo}
+          onChange={(e) => setTempo(Number(e.target.value))}
+        />
       </div>
 
-      {/* Seletor de intensidade do café */}
-      <div className={styles.seletorIntensidade}>
-        <label htmlFor="intensidade-cafe">Intensidade do café:</label>
-        <select
-          id="intensidade-cafe"
-          value={intensidadeCafe}
-          onChange={handleMudarIntensidade}
-          disabled={statusDaCafeteira === "preparando" || statusDaCafeteira === "limpando"}
-          aria-label="Selecionar intensidade do café"
-        >
-          <option value="fraco">Fraco</option>
-          <option value="medio">Médio</option>
-          <option value="forte">Forte</option>
-        </select>
+      <div className={styles.sliders}>
+        <div>
+          <div className={styles.valorVertical}>{agua}%</div>
+          <input
+            type="range"
+            min="0"
+            max="100"
+            value={agua}
+            onChange={(e) => setAgua(Number(e.target.value))}
+            className={styles.sliderVertical}
+          />
+          <p>Água</p>
+        </div>
+        <div>
+          <div className={styles.valorVertical}>{cafe}%</div>
+          <input
+            type="range"
+            min="0"
+            max="100"
+            value={cafe}
+            onChange={(e) => setCafe(Number(e.target.value))}
+            className={styles.sliderVertical}
+          />
+          <p>Café</p>
+        </div>
       </div>
 
-      {/* Botões de controle */}
+      <div className={styles.estado}>{estado}</div>
+
       <div className={styles.botoes}>
+        <button onClick={iniciar}>Iniciar</button>
+        <button onClick={() => setConfigOpen(!configOpen)}>Configurar</button>
         <button
-          onClick={handleIniciarPreparo}
-          aria-label="Iniciar preparo do café"
+          onClick={() => {
+            setEstado("Stand-by");
+            setUso(0); // Resetando o estado 'uso'
+            alert("Máquina limpa com sucesso!");
+            audioVibra.play();
+          }}
         >
-          ☕ Preparar Café
-        </button>
-        <button
-          onClick={handleIniciarLimpeza}
-          aria-label="Iniciar limpeza do sistema"
-        >
-          🧼 Limpar
-        </button>
-        <button
-          onClick={handleResetar}
-          aria-label="Resetar cafeteira"
-        >
-          🔁 Resetar
+          Limpar
         </button>
       </div>
 
-      {/* Indicador visual de status */}
-      <div className={styles.indicadores}>
-        <div
-          className={`${styles.indicador} ${classeIndicador()}`}
-          role="status"
-          aria-label={`Status: ${statusDaCafeteira}`}
-        ></div>
-      </div>
+      {configOpen && (
+        <div className={styles.config}>
+          <label>
+            <input
+              type="checkbox"
+              checked={feedback}
+              onChange={(e) => setFeedback(e.target.checked)}
+            />
+            Feedback sonoro/tátil
+          </label>
+        </div>
+      )}
     </div>
   );
 }

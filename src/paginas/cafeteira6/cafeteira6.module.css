@@ -1,82 +1,604 @@
+/* Estilos base */
 .cafeteira {
-  width: 360px;
-  margin: 40px auto;
+  position: relative;
+  max-width: 400px;
+  margin: 0 auto;
   padding: 20px;
+  background-color: #f5f5f5;
   border-radius: 20px;
-  background-color: #f8f8f8;
-  box-shadow: 0 6px 15px rgba(0,0,0,0.2);
-  font-family: sans-serif;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  overflow: hidden;
+  min-height: 600px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* S8: Barra superior de status */
+.topBar {
+  display: flex;
+  align-items: center;
+  padding: 10px 15px;
+  background-color: #333;
+  color: white;
+  border-radius: 10px 10px 0 0;
+  margin: -20px -20px 20px -20px;
+}
+
+.statusIcon {
+  margin-right: 10px;
+  font-size: 1.2rem;
+}
+
+.statusText {
+  font-weight: 500;
+}
+
+/* S4: Área de status principal */
+.statusArea {
   text-align: center;
-  transition: all 0.3s ease;
+  margin: 20px 0;
 }
 
-.acessivel {
-  background-color: #000;
-  color: #fff;
-  font-size: 18px;
+.statusEmoji {
+  font-size: 3rem;
+  display: block;
+  margin-bottom: 10px;
+  transition: transform 0.3s ease;
 }
 
-.titulo {
+.statusTexto {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+}
+
+/* S5: Termômetro */
+.termometroContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 20px 0;
+}
+
+.termometro {
+  position: relative;
+  width: 40px;
+  height: 200px;
+  background-color: #e0e0e0;
+  border-radius: 20px;
+  overflow: hidden;
+  border: 2px solid #ccc;
+}
+
+.termometroBar {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  background: linear-gradient(to top, #ff4757, #ff6b81);
+  transition: height 0.5s ease;
+}
+
+.termometroMarcacoes {
+  position: absolute;
+  right: -30px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  font-size: 0.8rem;
+}
+
+.temperaturaAtual {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #333;
+  margin-left: 20px;
+}
+
+/* S1: Controle de temperatura */
+.tempControl {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px 0;
+}
+
+.botaoControle {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: #333;
+  color: white;
+  border: none;
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.botaoControle:active {
+  transform: scale(0.95);
+  background-color: #555;
+}
+
+.tempDisplay {
+  margin: 0 20px;
+  text-align: center;
+}
+
+.tempValue {
+  font-size: 2.5rem;
+  font-weight: 700;
+}
+
+.tempUnidade {
+  font-size: 1.2rem;
+  color: #666;
+}
+
+/* S6: Controle de volume */
+.volumeContainer {
+  margin: 30px 0;
+}
+
+.volumeInfo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   margin-bottom: 10px;
 }
 
-.display {
-  background: #222;
-  color: #0f0;
+.volumeIcon {
+  font-size: 1.2rem;
+  margin-right: 10px;
+}
+
+.volumeValue {
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.volumeSlider {
+  width: 100%;
+  height: 10px;
+  -webkit-appearance: none;
+  appearance: none;
+  background: #ddd;
+  border-radius: 5px;
+  outline: none;
+}
+
+.volumeSlider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  background: #333;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.volumeSlider::-webkit-slider-thumb:active {
+  transform: scale(1.1);
+}
+
+/* S3: Cronômetro */
+.cronometroContainer {
+  margin: 20px 0;
+  text-align: center;
+}
+
+.cronometro {
+  margin-bottom: 10px;
+}
+
+.cronometroNumero {
+  font-size: 3rem;
+  font-weight: 700;
+  color: #333;
+}
+
+.cronometroUnidade {
+  display: block;
+  font-size: 1rem;
+  color: #666;
+}
+
+.cronometroBarra {
+  height: 8px;
+  background-color: #333;
+  border-radius: 4px;
+  transition: width 1s linear;
+}
+
+/* S10: Botões principais */
+.botoesPrincipais {
+  display: flex;
+  justify-content: space-between;
+  margin: 30px 0;
+}
+
+.botaoGrande {
+  flex: 1;
+  max-width: 45%;
   padding: 15px;
+  border-radius: 15px;
+  border: none;
+  background-color: #333;
+  color: white;
+  font-size: 1.1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.botaoGrande:active {
+  transform: scale(0.95);
+  background-color: #555;
+}
+
+.botaoGrande.desativado {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.botaoIcone {
+  font-size: 2rem;
+  margin-bottom: 5px;
+}
+
+.botaoTexto {
+  font-weight: 500;
+}
+
+/* S7: Alerta de limpeza */
+.alertaLimpeza {
+  padding: 10px 15px;
+  background-color: #ffeaa7;
+  color: #333;
   border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: auto;
+}
+
+.alertaIcone {
+  margin-right: 10px;
+  font-size: 1.2rem;
+}
+
+.alertaTexto {
+  font-weight: 500;
+}
+
+/* S9: Popup de erro */
+.popupOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.popupContainer {
+  background-color: white;
+  border-radius: 15px;
+  padding: 20px;
+  max-width: 300px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.popupCabecalho {
+  margin-bottom: 15px;
+}
+
+.popupIcone {
+  font-size: 2.5rem;
+  color: #ff4757;
+  display: block;
+  margin-bottom: 10px;
+}
+
+.popupTitulo {
+  font-size: 1.5rem;
+  color: #ff4757;
+  margin: 0;
+}
+
+.popupMensagem {
+  font-size: 1rem;
+  color: #333;
   margin-bottom: 20px;
 }
 
-.perfis {
-  margin-top: 10px;
-}
-
-.perfis button {
-  margin: 5px;
-  padding: 5px 10px;
-  font-size: 14px;
-  border: none;
-  border-radius: 6px;
-  background-color: #555;
-  color: white;
-  cursor: pointer;
-}
-
-.botoes button {
-  margin: 8px;
+.popupBotao {
   padding: 10px 20px;
-  font-size: 15px;
+  background-color: #ff4757;
+  color: white;
   border: none;
   border-radius: 10px;
-  background-color: #444;
-  color: white;
+  font-size: 1rem;
   cursor: pointer;
+  transition: all 0.2s ease;
 }
 
-.botoes button:hover {
-  background-color: #666;
+.popupBotao:active {
+  transform: scale(0.95);
+  background-color: #ff6b81;
 }
 
-.niveis {
+/* S2: Modal de tempo */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modalContainer {
+  background-color: white;
+  border-radius: 15px;
+  padding: 25px;
+  max-width: 300px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.modalTitulo {
+  font-size: 1.5rem;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.tempoSeletor {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 25px;
+}
+
+.tempoBotao {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: #333;
+  color: white;
+  border: none;
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.tempoBotao:active {
+  transform: scale(0.95);
+  background-color: #555;
+}
+
+.tempoDisplay {
+  margin: 0 20px;
+  text-align: center;
+}
+
+.tempoValor {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #333;
+}
+
+.tempoUnidade {
+  font-size: 1rem;
+  color: #666;
+  display: block;
+}
+
+.modalBotao {
+  padding: 12px 25px;
+  background-color: #333;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.modalBotao:active {
+  transform: scale(0.95);
+  background-color: #555;
+}
+
+/* S11/S12: Configurações */
+.configuracoes {
+  display: flex;
+  justify-content: center;
   margin-top: 20px;
-  text-align: left;
+  padding-top: 20px;
+  border-top: 1px solid #ddd;
 }
 
-.barra {
+.configItem {
+  display: flex;
+  align-items: center;
+  margin: 0 15px;
+}
+
+.configSwitch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 24px;
+  margin-right: 10px;
+}
+
+.configInput {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.configSlider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   background-color: #ccc;
-  border-radius: 6px;
+  transition: .4s;
+  border-radius: 24px;
+}
+
+.configSlider:before {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: .4s;
+  border-radius: 50%;
+}
+
+.configInput:checked + .configSlider {
+  background-color: #333;
+}
+
+.configInput:checked + .configSlider:before {
+  transform: translateX(26px);
+}
+
+.configLabel {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+/* Animações */
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+.statusEmoji {
+  animation: pulse 2s infinite;
+}
+
+/* Efeitos de hover para dispositivos com mouse */
+@media (hover: hover) {
+  .botaoControle:hover {
+    background-color: #555;
+  }
+  
+  .botaoGrande:hover {
+    background-color: #555;
+  }
+  
+  .popupBotao:hover {
+    background-color: #ff6b81;
+  }
+  
+  .tempoBotao:hover {
+    background-color: #555;
+  }
+  
+  .modalBotao:hover {
+    background-color: #555;
+  }
+  
+  .volumeSlider::-webkit-slider-thumb:hover {
+    background: #555;
+  }
+}
+
+.progressoLimpeza {
+  width: 100%;
+  background-color: #e0e0e0;
+  border-radius: 10px;
+  margin: 20px 0;
   overflow: hidden;
-  height: 14px;
-  margin-bottom: 10px;
+  position: relative;
 }
 
-.agua {
-  background-color: #00f;
-  height: 100%;
+.progressoLimpezaBarra {
+  height: 30px;
+  background-color: #70a1ff;
+  transition: width 0.5s ease;
 }
 
-.borra {
-  background-color: #964B00;
-  height: 100%;
+.progressoLimpezaTexto {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-weight: bold;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* Ajuste para 3 botões na linha */
+.botoesPrincipais {
+  display: flex;
+  justify-content: space-between;
+  margin: 30px 0;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.botaoGrande {
+  flex: 1;
+  min-width: calc(33% - 10px);
+  padding: 15px;
+  border-radius: 15px;
+  border: none;
+  background-color: #333;
+  color: white;
+  font-size: 1.1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* Cor diferente para o botão de limpeza */
+.botaoGrande:nth-child(3) {
+  background-color: #70a1ff;
+}
+
+.botaoGrande:nth-child(3):active {
+  background-color: #4d8bff;
+}
+
+@media (hover: hover) {
+  .botaoGrande:nth-child(3):hover {
+    background-color: #4d8bff;
+  }
 }

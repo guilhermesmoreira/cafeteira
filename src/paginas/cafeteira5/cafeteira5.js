@@ -1,110 +1,139 @@
-import React, { useEffect, useState } from "react";
+//Chat Puro
+
+import React, { useState, useEffect } from "react";
 import styles from "./cafeteira5.module.css";
 
-import beep from "../../assets/beep.mp3";
-import somCafePronto from "../../assets/somCafePronto.wav";
-import somManutencao from "../../assets/somLimpar.wav";
+import somClique from "../../assets/beep.mp3";
+import somErro from "../../assets/somLimpar.wav";
+import somPronto from "../../assets/somCafePronto.wav";
 
 function Cafeteira5() {
-  const [estado, setEstado] = useState("idle");
-  const [progresso, setProgresso] = useState(0);
-  const [tempoRestante, setTempoRestante] = useState(0);
-  const [temperatura, setTemperatura] = useState(90);
-  const [agua, setAgua] = useState(100);
-  const [borra, setBorra] = useState(0);
-  const [uso, setUso] = useState(0);
+  const [temperatura, setTemperatura] = useState(92);
+  const [tempo, setTempo] = useState(5);
+  const [extraindo, setExtraindo] = useState(false);
+  const [cronometro, setCronometro] = useState(0);
+  const [status, setStatus] = useState("Pronto");
+  const [volume, setVolume] = useState(100);
+  const [alertaLimpeza, setAlertaLimpeza] = useState(false);
+  const [mostrarPopup, setMostrarPopup] = useState(false);
+  const [somAtivo, setSomAtivo] = useState(true);
+  const [vibrar, setVibrar] = useState(true);
+  const [modalTempoAberto, setModalTempoAberto] = useState(false);
 
-  const tempoTotal = 10;
-  const audioPronto = new Audio(somCafePronto);
-  const audioAlerta = new Audio(beep);
-  const audioManutencao = new Audio(somManutencao);
+  const audioClique = new Audio(somClique);
+  const audioErro = new Audio(somErro);
+  const audioPronto = new Audio(somPronto);
 
-  useEffect(() => {
-    let timer;
-    if (estado === "preparando") {
-      setProgresso(0);
-      setTempoRestante(tempoTotal);
-      timer = setInterval(() => {
-        setProgresso((p) => {
-          const novo = p + 10;
-          if (novo >= 100) {
-            clearInterval(timer);
-            setEstado("pronto");
-            setAgua((a) => Math.max(0, a - 20));
-            setBorra((b) => Math.min(100, b + 20));
-            setUso((u) => u + 1);
-            audioPronto.play();
-          }
-          return novo;
-        });
-        setTempoRestante((t) => t - 1);
-      }, (tempoTotal * 1000) / 10);
-    }
-    return () => clearInterval(timer);
-  }, [estado]);
-
-  useEffect(() => {
-    if (uso > 0 && uso % 3 === 0) {
-      audioManutencao.play();
-    }
-  }, [uso]);
+  const tocarSom = (tipo) => {
+    if (!somAtivo) return;
+    if (tipo === "clique") audioClique.play();
+    if (tipo === "erro") audioErro.play();
+    if (tipo === "pronto") audioPronto.play();
+  };
 
   const iniciarPreparo = () => {
-    if (estado === "idle" && agua >= 20 && borra <= 80) {
-      setEstado("preparando");
-    } else {
-      setEstado("erro");
-      audioAlerta.play();
+    if (extraindo) return;
+    if (volume < 50) {
+      setMostrarPopup(true);
+      tocarSom("erro");
+      return;
     }
+
+    setStatus("Aquecendo");
+    setTimeout(() => {
+      setStatus("Extraindo");
+      setExtraindo(true);
+      setCronometro(tempo);
+      tocarSom("clique");
+    }, 1000);
   };
 
-  const resetar = () => {
-    setEstado("idle");
-    setProgresso(0);
-    setTempoRestante(0);
-  };
-
-  const limpar = () => {
-  setBorra(0);
-  setAgua(100);
-  audioManutencao.play();
-  setEstado("idle");
-};
-
+  useEffect(() => {
+    if (!extraindo) return;
+    if (cronometro === 0) {
+      setStatus("Pronto");
+      setExtraindo(false);
+      setAlertaLimpeza(true);
+      tocarSom("pronto");
+      return;
+    }
+    const timer = setTimeout(() => setCronometro(cronometro - 1), 1000);
+    return () => clearTimeout(timer);
+  }, [cronometro, extraindo]);
 
   return (
     <div className={styles.cafeteira}>
-      <h2 className={styles.titulo}>Cafeteira Touch 5.0</h2>
-
-      <div className={styles.display}>
-        <p>{estado === "preparando" ? "Preparando café..." : estado === "pronto" ? "☕ Café pronto!" : estado === "erro" ? "Erro! Verifique níveis ou reinicie." : "Toque para começar"}</p>
-        {estado === "preparando" && (
-          <>
-            <p>Progresso: {progresso}%</p>
-            <p>Tempo restante: {tempoRestante}s</p>
-          </>
-        )}
-        <p>Temperatura: {temperatura}°C</p>
-        <input type="range" min="70" max="100" value={temperatura} onChange={(e) => setTemperatura(e.target.value)} />
+      <div className={styles.topBar}>
+        <span className={styles.statusIcon}>🔋</span>
+        <span>{status}</span>
       </div>
+
+      <div className={styles.statusArea}>
+        <span>{status === "Extraindo" ? "☕" : status === "Aquecendo" ? "🔥" : "✅"}</span>
+        <p>{status}</p>
+      </div>
+
+      <div className={styles.tempControl}>
+        <button onClick={() => setTemperatura(temperatura - 1)}>-</button>
+        <div>{temperatura}°C</div>
+        <button onClick={() => setTemperatura(temperatura + 1)}>+</button>
+      </div>
+
+      <div className={styles.termometro}>
+        <div style={{ height: `${temperatura}%` }} className={styles.termometroBar}></div>
+        <span>{temperatura}°</span>
+      </div>
+
+      <div className={styles.volume}>
+        <input type="range" min="0" max="200" value={volume} onChange={(e) => setVolume(+e.target.value)} />
+        <p>{volume}ml</p>
+      </div>
+
+      {extraindo && (
+        <div className={styles.cronometro}>
+          <p>{cronometro}s</p>
+        </div>
+      )}
 
       <div className={styles.botoes}>
-        <button onClick={iniciarPreparo}>☕ Iniciar</button>
-        <button onClick={resetar}>🔁 Resetar</button>
-        <button onClick={limpar}>🧼 Limpar</button>
+        <button className={styles.botaoGrande} onClick={iniciarPreparo}>☕ Iniciar</button>
+        <button className={styles.botaoGrande} onClick={() => setModalTempoAberto(true)}>⏱ Tempo</button>
       </div>
 
-      <div className={styles.niveis}>
-        <p>Água: {agua}%</p>
-        <div className={styles.barra}><div className={styles.agua} style={{ width: `${agua}%` }}></div></div>
-
-        <p>Café: {borra}%</p>
-        <div className={styles.barra}><div className={styles.borra} style={{ width: `${borra}%` }}></div></div>
-      </div>
-
-      {uso > 0 && uso % 3 === 0 && (
-        <div className={styles.alerta}>🔧 Recomendado realizar limpeza!</div>
+      {alertaLimpeza && (
+        <div className={styles.alertaLimpeza}>🧼 Limpeza necessária</div>
       )}
+
+      {mostrarPopup && (
+        <div className={styles.popup}>
+          <div>
+            <h3>Erro</h3>
+            <p>Volume insuficiente para preparo.</p>
+            <button onClick={() => setMostrarPopup(false)}>Entendi</button>
+          </div>
+        </div>
+      )}
+
+      {modalTempoAberto && (
+        <div className={styles.modalTempo}>
+          <div>
+            <h3>Tempo de extração</h3>
+            <input type="number" value={tempo} onChange={(e) => setTempo(+e.target.value)} />
+            <button onClick={() => setModalTempoAberto(false)}>Pronto</button>
+          </div>
+        </div>
+      )}
+
+      <div className={styles.config}>
+        <label>
+          <input type="checkbox" checked={somAtivo} onChange={(e) => setSomAtivo(e.target.checked)} />
+          Som
+        </label>
+        <label>
+          <input type="checkbox" checked={vibrar} onChange={(e) => setVibrar(e.target.checked)} />
+          Vibração
+        </label>
+      </div>
     </div>
   );
 }

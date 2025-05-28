@@ -1,0 +1,71 @@
+.cafeteira {
+  width: 350px;
+  margin: 40px auto;
+  padding: 20px;
+  border-radius: 20px;
+  background-color: #f9f9f9;
+  box-shadow: 0 6px 12px rgba(0,0,0,0.25);
+  font-family: sans-serif;
+  text-align: center;
+}
+
+.titulo {
+  margin-bottom: 10px;
+}
+
+.display {
+  background-color: #222;
+  color: #0f0;
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+input[type="range"] {
+  width: 100%;
+  margin-top: 10px;
+}
+
+.botoes button {
+  margin: 8px;
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 12px;
+  background-color: #444;
+  color: white;
+  cursor: pointer;
+}
+
+.botoes button:hover {
+  background-color: #666;
+}
+
+.niveis {
+  margin-top: 20px;
+  text-align: left;
+}
+
+.barra {
+  background-color: #ccc;
+  border-radius: 6px;
+  overflow: hidden;
+  height: 14px;
+  margin-bottom: 10px;
+}
+
+.agua {
+  background-color: #00f;
+  height: 100%;
+}
+
+.borra {
+  background-color: #964B00;
+  height: 100%;
+}
+
+.alerta {
+  margin-top: 15px;
+  color: #c00;
+  font-weight: bold;
+}

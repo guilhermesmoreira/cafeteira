@@ -1,0 +1,116 @@
+/* Estilos gerais da cafeteira */
+.cafeteira {
+  width: 320px;
+  margin: 30px auto;
+  padding: 20px;
+  border-radius: 15px;
+  background: #f3f3f3;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+/* Estilos do display */
+.display {
+  background: #222;
+  color: #0f0;
+  padding: 15px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  min-height: 80px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.infoProgresso {
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+/* Estilos do seletor de intensidade */
+.seletorIntensidade {
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.seletorIntensidade label {
+  font-size: 16px;
+  color: #333;
+}
+
+.seletorIntensidade select {
+  padding: 8px;
+  font-size: 16px;
+  border: 1px solid #444;
+  border-radius: 5px;
+  background-color: #fff;
+  cursor: pointer;
+}
+
+.seletorIntensidade select:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.seletorIntensidade select:focus {
+  outline: 2px solid #0f0;
+  outline-offset: 2px;
+}
+
+/* Estilos dos botões */
+.botoes {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.botoes button {
+  padding: 12px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 10px;
+  background-color: #444;
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.botoes button:hover {
+  background-color: #666;
+}
+
+.botoes button:focus {
+  outline: 2px solid #0f0;
+  outline-offset: 2px;
+}
+
+/* Estilos do indicador de status */
+.indicadores {
+  margin-top: 20px;
+}
+
+.indicador {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  margin: 0 auto;
+  background-color: #bbb;
+  transition: background-color 0.3s ease;
+}
+
+.indicadorVerde {
+  background-color: #0f0;
+}
+
+.indicadorVermelho {
+  background-color: #f00;
+}
+
+.indicadorAzul {
+  background-color: #00f;
+}

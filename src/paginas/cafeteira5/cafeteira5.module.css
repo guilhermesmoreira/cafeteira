@@ -1,71 +1,100 @@
 .cafeteira {
-  width: 350px;
-  margin: 40px auto;
+  max-width: 400px;
+  margin: 20px auto;
   padding: 20px;
-  border-radius: 20px;
-  background-color: #f9f9f9;
-  box-shadow: 0 6px 12px rgba(0,0,0,0.25);
+  background: #f9f9f9;
+  border-radius: 15px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.2);
   font-family: sans-serif;
+  position: relative;
+}
+
+.topBar {
+  display: flex;
+  justify-content: space-between;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.statusArea {
+  text-align: center;
+  font-size: 18px;
+}
+
+.tempControl {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  font-size: 20px;
+  margin: 15px 0;
+}
+
+.termometro {
+  height: 100px;
+  width: 30px;
+  background: #ddd;
+  margin: 10px auto;
+  position: relative;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.termometroBar {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  background: red;
+}
+
+.volume {
   text-align: center;
 }
 
-.titulo {
-  margin-bottom: 10px;
+.cronometro {
+  font-size: 32px;
+  text-align: center;
+  margin: 10px 0;
 }
 
-.display {
-  background-color: #222;
-  color: #0f0;
+.botoes {
+  display: flex;
+  justify-content: space-around;
+  margin: 15px 0;
+}
+
+.botaoGrande {
   padding: 15px;
-  border-radius: 10px;
-  margin-bottom: 20px;
+  font-size: 18px;
 }
 
-input[type="range"] {
-  width: 100%;
-  margin-top: 10px;
-}
-
-.botoes button {
-  margin: 8px;
-  padding: 10px 20px;
-  font-size: 16px;
-  border: none;
-  border-radius: 12px;
-  background-color: #444;
-  color: white;
-  cursor: pointer;
-}
-
-.botoes button:hover {
-  background-color: #666;
-}
-
-.niveis {
-  margin-top: 20px;
-  text-align: left;
-}
-
-.barra {
-  background-color: #ccc;
-  border-radius: 6px;
-  overflow: hidden;
-  height: 14px;
-  margin-bottom: 10px;
-}
-
-.agua {
-  background-color: #00f;
-  height: 100%;
-}
-
-.borra {
-  background-color: #964B00;
-  height: 100%;
-}
-
-.alerta {
-  margin-top: 15px;
-  color: #c00;
+.alertaLimpeza {
+  color: orange;
+  text-align: center;
   font-weight: bold;
+}
+
+.popup, .modalTempo {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.popup > div, .modalTempo > div {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.config {
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-around;
 }

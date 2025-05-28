@@ -8,6 +8,9 @@ import Cafeteira3 from './paginas/cafeteira3/cafeteira3';
 import Cafeteira4 from './paginas/cafeteira4/cafeteira4';
 import Cafeteira5 from './paginas/cafeteira5/cafeteira5';
 import Cafeteira6 from './paginas/cafeteira6/cafeteira6';
+import Cafeteira7 from './paginas/cafeteira7/cafeteira7';
+import Cafeteira8 from './paginas/cafeteira8/cafeteira8';
+import Cafeteira9 from './paginas/cafeteira9/cafeteira9';
 
 // Componente da página inicial com os botões
 function Home() {
@@ -45,6 +48,21 @@ function Home() {
             Cafeteira 6
           </Link>
         </button>
+        <button>
+          <Link to="/cafeteira7" style={{ textDecoration: 'none', color: 'inherit' }}>
+            Cafeteira 7
+          </Link>
+        </button>
+        <button>
+          <Link to="/cafeteira8" style={{ textDecoration: 'none', color: 'inherit' }}>
+            Cafeteira 8
+          </Link>
+        </button>
+        <button>
+          <Link to="/cafeteira9" style={{ textDecoration: 'none', color: 'inherit' }}>
+            Cafeteira 9
+          </Link>
+        </button>
       </div>
     </div>
   );
@@ -59,9 +77,12 @@ function App() {
           <Route path="/cafeteira1" element={<Cafeteira />} /> {/* Rota para Cafeteira 1 */}
           <Route path="/cafeteira2" element={<Cafeteira2 />} /> {/* Rota para Cafeteira 2 */}
           <Route path="/cafeteira3" element={<Cafeteira3 />} /> {/* Rota para Cafeteira 3 */}
-          <Route path="/cafeteira4" element={<Cafeteira4 />} /> {/* Rota para Cafeteira 4 */}
-          <Route path="/cafeteira5" element={<Cafeteira5 />} /> {/* Rota para Cafeteira 5 */}
+          <Route path="/cafeteira4" element={<Cafeteira4 />} /> {/* Rota para Cafeteira 3 */}
+          <Route path="/cafeteira5" element={<Cafeteira5 />} /> {/* Rota para Cafeteira 3 */}
           <Route path="/cafeteira6" element={<Cafeteira6 />} /> {/* Rota para Cafeteira 6 */}
+          <Route path="/cafeteira7" element={<Cafeteira7 />} /> {/* Rota para Cafeteira 7 */}
+          <Route path="/cafeteira8" element={<Cafeteira8 />} /> {/* Rota para Cafeteira 8 */}
+          <Route path="/cafeteira9" element={<Cafeteira9 />} /> {/* Rota para Cafeteira 9 */}
         </Routes>
       </div>
     </Router>
