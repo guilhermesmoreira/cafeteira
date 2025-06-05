@@ -131,11 +131,10 @@ const Cafeteira = () => {
     const audio = new Audio(som);
     audio.play();
   };
-
-
-
-  return (
+  
+  return (    
     <div className={`${style.cafeteira} ${isVibrating ? style.vibrateEffect : ''}`}>
+      <h2 className="text-xl font-bold">Cafeteira 1</h2>
       <div className={style.containerCafe}>
         <div className={style.barraCafe} style={{ height: `${cafe}%` }}>
           <span className={style.porcentagem}>{cafe}%</span>

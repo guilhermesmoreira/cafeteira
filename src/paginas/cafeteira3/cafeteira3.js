@@ -1,4 +1,4 @@
-// Atualizado Cafeteira3.js aplicando as melhorias (S1 a S12)
+// Chat Puro
 import { useState, useEffect } from "react";
 import styles from "../../paginas/cafeteira3/cafeteira3.module.css";
 import { Card, CardContent } from "../../components/ui/card";
@@ -124,7 +124,7 @@ export default function Cafeteira3() {
     <div className={styles.container}>
       <Card className={styles.card}>
         <CardContent>
-          <h2 className="text-xl font-bold">Cafeteira Inteligente</h2>
+          <h2 className="text-xl font-bold">Cafeteira Inteligente 3</h2>
 
           <div className={styles.statusBar}>
             <span>Status: {status}</span>

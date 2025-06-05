@@ -4,6 +4,7 @@ import { MdPowerSettingsNew, MdWaterDrop, MdCoffeeMaker, MdCoffee, MdCleaningSer
 import beepSound from '../../assets/beep.mp3';
 import coffeeReadySound from '../../assets/somCafePronto.wav';
 import cleanSound from '../../assets/somLimpar.wav';
+import { GiCoffeeBeans } from "react-icons/gi";
 
 
 function PowerButton({ isOn, setIsOn }) {
@@ -69,7 +70,7 @@ function DisplayScreen({ status, waterLevel, mode, cleaningProgress, coffeeLevel
       <p>Status: {status}</p>
       <p>Nível de Água: {waterLevel}%</p>
       <p>Nível de Café: {coffeeLevel}%</p>
-      <p>Café Pronto: {brewedCoffeeLevel}%</p>
+      <p>Café Pronto: {brewedCoffeeLevel.toFixed(2)}%</p>
       {mode === 'limpeza' ? (
         <p>Progresso da Limpeza: {cleaningProgress}%</p>
       ) : (
@@ -287,9 +288,12 @@ function Cafeteira2() {
   };
 
   return (
+    <>
+    <h2 className="text-xl font-bold">Cafeteira 2</h2>
     <div className={`${styles.coffeeMakerContainer} ${isVibrating ? styles.vibrateEffect : ''}`}>
-      <div className={styles.coffeeMaker}>
-        <div className={styles.topBar}>
+      
+      <div className={styles.coffeeMaker}>        
+        <div className={styles.topBar}>          
           <PowerButton isOn={isOn} setIsOn={setIsOn} />
         </div>
         <div className={styles.modeSelectorContainer}>
@@ -360,7 +364,7 @@ function Cafeteira2() {
                 onClick={addCoffee}
                 disabled={mode === 'limpeza' || coffeeAdded}
               >
-                <MdCoffeeMaker />
+                <GiCoffeeBeans />
               </button>
               <button
                 className={`${styles.cleanButton} ${mode === 'limpeza' ? styles.cleanButtonActive : ''}`}
@@ -406,6 +410,8 @@ function Cafeteira2() {
 
       </div>
     </div>
+    </>
+    
   );
 }
 

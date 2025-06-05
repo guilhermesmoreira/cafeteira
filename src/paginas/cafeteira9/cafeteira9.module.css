@@ -80,3 +80,64 @@
   background-color: #964B00;
   height: 100%;
 }
+
+.alavanca {
+  position: relative;
+  width: 40px;
+  height: 60px;
+  margin: 20px auto;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  transition: transform 0.2s ease;
+}
+
+.alavanca:hover {
+  transform: scale(1.05);
+}
+
+.tracoHorizontal,
+.tracoVertical {
+  width: 20px;
+  height: 40px;
+  background-color: #6e4b1f;  
+}
+
+.tracoHorizontal {
+  width: 40px;
+  height: 10px;
+  background-color: #6e4b1f;  
+  
+}
+
+.tracoVertical {
+  width: 10px;
+  height: 30px;
+}
+
+.desativado {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+.mensagemCafe {
+  text-align: center;
+  font-size: 18px;
+  font-weight: bold;
+  color: #2ecc71;
+  margin-top: 10px;
+  animation: fadeIn 0.4s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

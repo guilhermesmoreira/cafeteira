@@ -1,3 +1,4 @@
+//Chat puro
 import React, { useEffect, useState } from "react";
 import styles from "./cafeteira8.module.css";
 
@@ -74,7 +75,7 @@ function Cafeteira8() {
 
   return (
     <div className={styles.cafeteira}>
-      <h2 className={styles.titulo}>Cafeteira Touch 5.0</h2>
+      <h2 className={styles.titulo}>Cafeteira Touch 8.0</h2>
 
       <div className={styles.display}>
         <p>{estado === "preparando" ? "Preparando café..." : estado === "pronto" ? "☕ Café pronto!" : estado === "erro" ? "Erro! Verifique níveis ou reinicie." : "Toque para começar"}</p>

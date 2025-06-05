@@ -19,6 +19,7 @@ function Cafeteira9() {
   const [agua, setAgua] = useState(100);
   const [borra, setBorra] = useState(0);
   const [modoAcessivel, setModoAcessivel] = useState(false);
+  const [cafeServido, setCafeServido] = useState(false);
 
   const perfilAtual = perfis[perfilIndex];
   const audioPronto = new Audio(somCafePronto);
@@ -51,6 +52,7 @@ function Cafeteira9() {
   const iniciarPreparo = () => {
     if (estado === "idle" && agua >= 20 && borra <= 80) {
       setEstado("preparando");
+      setCafeServido(false);
     } else {
       audioErro.play();
       setEstado("erro");
@@ -61,6 +63,7 @@ function Cafeteira9() {
     setAgua(100);
     setBorra(0);
     setEstado("idle");
+    setCafeServido(false);
     audioLimpar.play();
   };
 
@@ -68,14 +71,25 @@ function Cafeteira9() {
     setEstado("idle");
     setProgresso(0);
     setTempoRestante(0);
+    setCafeServido(false);
+  };
+
+  const servirCafe = () => {
+    if (estado === "pronto") {
+      setCafeServido(true);
+    }
   };
 
   return (
     <div className={`${styles.cafeteira} ${modoAcessivel ? styles.acessivel : ""}`}>
-      <h2 className={styles.titulo}>☕ Cafeteira Inteligente 6.0</h2>
-
+      <h2 className={styles.titulo}>☕ Cafeteira Inteligente 9.0</h2>
       <div className={styles.display}>
-        <p>{estado === "preparando" ? "Preparando café..." : estado === "pronto" ? "☕ Café pronto!" : estado === "erro" ? "Erro! Verifique água ou borras." : "Selecione e prepare"}</p>
+        <p>{
+          estado === "preparando" ? "Preparando café..." :
+          estado === "pronto" ? "☕ Café pronto!" :
+          estado === "erro" ? "Erro! Verifique água ou borras." :
+          "Selecione e prepare"
+        }</p>
         {estado === "preparando" && (
           <>
             <p>Progresso: {progresso}%</p>
@@ -105,6 +119,16 @@ function Cafeteira9() {
         <p>Borras: {borra}%</p>
         <div className={styles.barra}><div className={styles.borra} style={{ width: `${borra}%` }}></div></div>
       </div>
+
+      <div
+        className={`${styles.alavanca} ${estado !== "pronto" ? styles.desativado : ""}`}
+        onClick={servirCafe}
+      >
+        <div className={styles.tracoHorizontal}></div>
+        <div className={styles.tracoVertical}></div>
+      </div>
+
+      {cafeServido && <p className={styles.mensagemCafe}>☕ Café Servido!</p>}
     </div>
   );
 }

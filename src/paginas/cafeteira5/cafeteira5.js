@@ -62,6 +62,8 @@ function Cafeteira5() {
   }, [cronometro, extraindo]);
 
   return (
+    <>
+    <h2 className="text-xl font-bold">Cafeteira 5</h2>
     <div className={styles.cafeteira}>
       <div className={styles.topBar}>
         <span className={styles.statusIcon}>🔋</span>
@@ -135,6 +137,7 @@ function Cafeteira5() {
         </label>
       </div>
     </div>
+    </>
   );
 }
 

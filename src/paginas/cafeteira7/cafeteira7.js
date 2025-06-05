@@ -1,36 +1,32 @@
 import React, { useState, useEffect } from "react";
 import styles from "./cafeteira7.module.css";
 
-// Importação dos arquivos de áudio
 import beep from "../../assets/beep.mp3";
 import somCafePronto from "../../assets/somCafePronto.wav";
 import somLimpar from "../../assets/somLimpar.wav";
 
-// Configurações globais da cafeteira
 const CONFIG = {
-  INTERVALOS: 10, // Quantidade de intervalos para a barra de progresso
+  INTERVALOS: 10,
   TEMPOS_PREPARO: {
-    fraco: 8, // Tempo em segundos para café fraco
-    medio: 10, // Tempo em segundos para café médio
-    forte: 12, // Tempo em segundos para café forte
+    fraco: 8,
+    medio: 10,
+    forte: 12,
   },
-  TEMPO_LIMPEZA: 10, // Tempo em segundos para limpeza
+  TEMPO_LIMPEZA: 10,
 };
 
-// Componente principal da cafeteira virtual
 function Cafeteira7() {
-  // Estados para gerenciar o status da cafeteira, progresso, tempo restante e intensidade
   const [statusDaCafeteira, setStatusDaCafeteira] = useState("idle");
   const [progressoPreparo, setProgressoPreparo] = useState(0);
   const [segundosRestantes, setSegundosRestantes] = useState(0);
-  const [intensidadeCafe, setIntensidadeCafe] = useState("medio"); // Intensidade padrão: médio
+  const [intensidadeCafe, setIntensidadeCafe] = useState("medio");
+  const [cafePronto, setCafePronto] = useState(false);
+  const [mensagemCafe, setMensagemCafe] = useState("");
 
-  // Instâncias de áudio para feedback sonoro
   const audioCafePronto = new Audio(somCafePronto);
   const audioLimpeza = new Audio(somLimpar);
   const audioErro = new Audio(beep);
 
-  // Textos exibidos no display para cada estado
   const mensagensDisplay = {
     idle: "Aguardando comando...",
     preparando: `Preparando café ${intensidadeCafe}...`,
@@ -39,59 +35,54 @@ function Cafeteira7() {
     erro: "Erro! Por favor, reinicie a cafeteira.",
   };
 
-  // Função auxiliar para tocar som de erro e definir estado de erro
   const dispararErro = () => {
     audioErro.play();
     setStatusDaCafeteira("erro");
   };
 
-  // Função para iniciar o preparo do café
   const handleIniciarPreparo = () => {
     if (statusDaCafeteira === "idle" || statusDaCafeteira === "pronto") {
       setStatusDaCafeteira("preparando");
+      setMensagemCafe("");
     } else {
       dispararErro();
     }
   };
 
-  // Função para iniciar o processo de limpeza
   const handleIniciarLimpeza = () => {
     if (statusDaCafeteira === "idle" || statusDaCafeteira === "pronto") {
       setStatusDaCafeteira("limpando");
+      setMensagemCafe("");
       audioLimpeza.play();
     } else {
       dispararErro();
     }
   };
 
-  // Função para resetar a cafeteira
   const handleResetar = () => {
     setStatusDaCafeteira("idle");
     setProgressoPreparo(0);
     setSegundosRestantes(0);
-    setIntensidadeCafe("medio"); // Reseta para intensidade padrão
+    setIntensidadeCafe("medio");
+    setMensagemCafe("");
+    setCafePronto(false);
   };
 
-  // Função para atualizar a intensidade do café
   const handleMudarIntensidade = (event) => {
     setIntensidadeCafe(event.target.value);
   };
 
-  // Efeito para gerenciar o temporizador de preparo ou limpeza
   useEffect(() => {
     let temporizador;
 
     if (statusDaCafeteira === "preparando" || statusDaCafeteira === "limpando") {
-      // Define o tempo total com base no estado
       const tempoTotal = statusDaCafeteira === "preparando" 
         ? CONFIG.TEMPOS_PREPARO[intensidadeCafe] 
         : CONFIG.TEMPO_LIMPEZA;
 
-      // Inicializa progresso e tempo restante
       setProgressoPreparo(0);
       setSegundosRestantes(tempoTotal);
 
-      // Calcula o intervalo de atualização (em milissegundos)
       const intervaloMs = (tempoTotal * 1000) / CONFIG.INTERVALOS;
 
       temporizador = setInterval(() => {
@@ -102,6 +93,8 @@ function Cafeteira7() {
             setStatusDaCafeteira("pronto");
             if (statusDaCafeteira === "preparando") {
               audioCafePronto.play();
+              setCafePronto(true);
+              setMensagemCafe("☕ Café Pronto!");
             }
             return 100;
           }
@@ -112,11 +105,9 @@ function Cafeteira7() {
       }, intervaloMs);
     }
 
-    // Limpeza do temporizador ao desmontar o componente ou mudar o estado
     return () => clearInterval(temporizador);
   }, [statusDaCafeteira, intensidadeCafe]);
 
-  // Determina a classe CSS do indicador com base no status
   const classeIndicador = () => {
     switch (statusDaCafeteira) {
       case "erro":
@@ -131,9 +122,16 @@ function Cafeteira7() {
     }
   };
 
+  const servirCafe = () => {
+    if (!cafePronto) return;
+    setMensagemCafe("☕ Café Servido!");
+    setCafePronto(false);
+  };
+
   return (
+    <>
+    <h2 className="text-xl font-bold">Cafeteira 7</h2>
     <div className={styles.cafeteira}>
-      {/* Display da cafeteira */}
       <div className={styles.display}>
         <p>{mensagensDisplay[statusDaCafeteira]}</p>
         {(statusDaCafeteira === "preparando" || statusDaCafeteira === "limpando") && (
@@ -144,7 +142,8 @@ function Cafeteira7() {
         )}
       </div>
 
-      {/* Seletor de intensidade do café */}
+      {mensagemCafe && <div className={styles.mensagem}>{mensagemCafe}</div>}
+
       <div className={styles.seletorIntensidade}>
         <label htmlFor="intensidade-cafe">Intensidade do café:</label>
         <select
@@ -160,37 +159,22 @@ function Cafeteira7() {
         </select>
       </div>
 
-      {/* Botões de controle */}
       <div className={styles.botoes}>
-        <button
-          onClick={handleIniciarPreparo}
-          aria-label="Iniciar preparo do café"
-        >
-          ☕ Preparar Café
-        </button>
-        <button
-          onClick={handleIniciarLimpeza}
-          aria-label="Iniciar limpeza do sistema"
-        >
-          🧼 Limpar
-        </button>
-        <button
-          onClick={handleResetar}
-          aria-label="Resetar cafeteira"
-        >
-          🔁 Resetar
-        </button>
+        <button onClick={handleIniciarPreparo} aria-label="Iniciar preparo do café">☕ Preparar Café</button>
+        <button onClick={handleIniciarLimpeza} aria-label="Iniciar limpeza do sistema">🧼 Limpar</button>
+        <button onClick={handleResetar} aria-label="Resetar cafeteira">🔁 Resetar</button>
       </div>
 
-      {/* Indicador visual de status */}
+      <div className={`${styles.alavanca} ${!cafePronto ? styles.desativado : ""}`} onClick={servirCafe}>
+        <div className={styles.tracoHorizontal}></div>
+        <div className={styles.tracoVertical}></div>
+      </div>
+
       <div className={styles.indicadores}>
-        <div
-          className={`${styles.indicador} ${classeIndicador()}`}
-          role="status"
-          aria-label={`Status: ${statusDaCafeteira}`}
-        ></div>
+        <div className={`${styles.indicador} ${classeIndicador()}`} role="status" aria-label={`Status: ${statusDaCafeteira}`}></div>
       </div>
     </div>
+    </>
   );
 }
 

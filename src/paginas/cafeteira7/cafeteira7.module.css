@@ -114,3 +114,49 @@
 .indicadorAzul {
   background-color: #00f;
 }
+
+/* Estilo da mensagem exibida ao servir café */
+.mensagemCafe {
+  text-align: center;
+  font-size: 18px;
+  font-weight: bold;
+  color: #2ecc71;
+  margin-top: 10px;
+}
+
+/* Estilo da alavanca (torneira) */
+.alavanca {
+  margin: 20px auto;
+  width: 40px;
+  height: 60px;
+  position: relative;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Parte vertical da alavanca */
+.tracoVertical {
+  width: 10px;
+  height: 40px;
+  background-color: #8b4513;
+  border-radius: 4px;
+}
+
+/* Parte horizontal da alavanca */
+.tracoHorizontal {
+  width: 30px;
+  height: 10px;
+  background-color: #8b4513;
+  border-radius: 4px;
+  position: absolute;
+  top: 0;
+}
+
+/* Alavanca desativada (quando café não está pronto) */
+.desativado {
+  opacity: 0.4;
+  pointer-events: none;
+}
