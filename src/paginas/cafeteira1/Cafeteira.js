@@ -18,6 +18,8 @@ const Cafeteira = () => {
   const [isVibrating, setIsVibrating] = useState(false);
   const [temperatura, setTemperatura] = useState(90);
   const [tempoCronometro, setTempoCronometro] = useState(0);
+  const [torneiraUsos, setTorneiraUsos] = useState(0);
+
 
   useEffect(() => {
     let intervalo;
@@ -72,7 +74,7 @@ const Cafeteira = () => {
 
       return () => clearInterval(intervalo);
     } else {
-      setCorAgua("#00bfff");
+
       setMensagem("");
     }
   }, [cafePronto, temperatura]);
@@ -122,17 +124,31 @@ const Cafeteira = () => {
   };
 
   const servirCafe = () => {
-    if (!cafePronto) return;
-    setCafeServido(true);
+    if (!cafePronto || agua < 25 || torneiraUsos >= 4) return;
+
+    setAgua((prev) => Math.max(prev - 25, 0));
     setMensagem('Café Servido!');
+    setCafeServido(true);
+    setTorneiraUsos(prev => prev + 1);
+
+    if (torneiraUsos + 1 >= 4 || agua - 25 < 25) {
+      setCafePronto(false); // desativa a torneira após 4 usos ou pouca água
+    }
+
+    setTimeout(() => {
+      setMensagem('');
+      setCafeServido(false);
+    }, 2000);
   };
+
+
 
   const tocarSom = (som) => {
     const audio = new Audio(som);
     audio.play();
   };
-  
-  return (    
+
+  return (
     <div className={`${style.cafeteira} ${isVibrating ? style.vibrateEffect : ''}`}>
       <h2 className="text-xl font-bold">Cafeteira 1</h2>
       <div className={style.containerCafe}>
@@ -187,7 +203,7 @@ const Cafeteira = () => {
           </div>
 
           <div
-            className={`${style.alavanca} ${!cafePronto ? style.desativado : ""}`}
+            className={`${style.alavanca} ${(!cafePronto || torneiraUsos >= 4) ? style.desativado : ""}`}
             onClick={servirCafe}
           >
             <div className={style.tracoHorizontal}></div>

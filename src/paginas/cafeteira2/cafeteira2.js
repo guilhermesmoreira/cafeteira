@@ -121,6 +121,9 @@ function Cafeteira2() {
   const [tempoPreparoRestante, setTempoPreparoRestante] = useState(0);
   const [vibracaoAtiva, setVibracaoAtiva] = useState(true);
   const [somAtivo, setSomAtivo] = useState(true);
+  const [torneiraUsos, setTorneiraUsos] = useState(0);
+  const [mensagem, setMensagem] = useState('');
+
 
   const tocarSom = (audio) => {
     if (!somAtivo) return;
@@ -226,6 +229,7 @@ function Cafeteira2() {
 
   const brewCoffee = () => {
     if (isOn && mode === 'preparo' && waterLevel === 100 && coffeeLevel === 100) {
+      setTorneiraUsos(0);
       setStatus('preparando');
 
       let segundosTotal = parseInt(tempoExtracao); // valor escolhido pelo usuário
@@ -269,6 +273,7 @@ function Cafeteira2() {
             setCoffeeLevel(0);
             setWaterAdded(false);
             setCoffeeAdded(false);
+            setTorneiraUsos(0);
             return 0;
           }
           const newBrew = prevBrew - 1;
@@ -287,131 +292,158 @@ function Cafeteira2() {
     }
   };
 
+  const servirCafe = () => {
+    if (brewedCoffeeLevel < 25 || torneiraUsos >= 4) return;
+
+    setBrewedCoffeeLevel(prev => Math.max(prev - 25, 0));
+    setTorneiraUsos(prev => prev + 1);
+    setMensagem('Café Servido!');
+
+    // Remover mensagem depois de 2 segundos
+    setTimeout(() => {
+      setMensagem('');
+    }, 2000);
+  };
+
+
   return (
     <>
-    <h2 className="text-xl font-bold">Cafeteira 2</h2>
-    <div className={`${styles.coffeeMakerContainer} ${isVibrating ? styles.vibrateEffect : ''}`}>
-      
-      <div className={styles.coffeeMaker}>        
-        <div className={styles.topBar}>          
-          <PowerButton isOn={isOn} setIsOn={setIsOn} />
-        </div>
-        <div className={styles.modeSelectorContainer}>
-          <ModeSelector mode={mode} setMode={setMode} />
-        </div>
-        <div className={styles.controls}>
-          <LedIndicators status={status} />
-          <DisplayScreen
-            status={status}
-            waterLevel={waterLevel}
-            mode={mode}
-            cleaningProgress={cleaningProgress}
-            coffeeLevel={coffeeLevel}
-            brewedCoffeeLevel={brewedCoffeeLevel}
-          />
-          <p>Tempo de Preparo: {tempoPreparoRestante > 0 ? `${tempoPreparoRestante}s` : "0s"}</p>
-          <div className={styles.temperaturaControl}>
-            <label>Temperatura Inicial da Água: {temperatura}°C</label>
-            <input
-              type="range"
-              min="85"
-              max="100"
-              value={temperatura}
-              onChange={alterarTemperatura}
-              className={styles.sliderTemperatura}
-            />
+      <h2 className="text-xl font-bold">Cafeteira 2</h2>
+      <div className={`${styles.coffeeMakerContainer} ${isVibrating ? styles.vibrateEffect : ''}`}>
+
+        <div className={styles.coffeeMaker}>
+          <div className={styles.topBar}>
+            <PowerButton isOn={isOn} setIsOn={setIsOn} />
           </div>
-          <button className={styles.button} onClick={abrirModalTempo}>
-            Ajustar Tempo de Extração
-          </button>
-          {mostrarModalTempo && (
-            <div className={styles.modal}>
-              <div className={styles.modalContent}>
-                <h3>Tempo de Extração</h3>
-                <input
-                  type="number"
-                  value={tempoExtracao}
-                  min="10"
-                  max="60"
-                  onChange={(e) => setTempoExtracao(e.target.value)}
-                />
-                <button onClick={confirmarTempo} className={styles.button}>
-                  Pronto
+          <div className={styles.modeSelectorContainer}>
+            <ModeSelector mode={mode} setMode={setMode} />
+          </div>
+          <div className={styles.controls}>
+            <LedIndicators status={status} />
+            <DisplayScreen
+              status={status}
+              waterLevel={waterLevel}
+              mode={mode}
+              cleaningProgress={cleaningProgress}
+              coffeeLevel={coffeeLevel}
+              brewedCoffeeLevel={brewedCoffeeLevel}
+            />
+            <p>Tempo de Preparo: {tempoPreparoRestante > 0 ? `${tempoPreparoRestante}s` : "0s"}</p>
+            <div className={styles.temperaturaControl}>
+              <label>Temperatura Inicial da Água: {temperatura}°C</label>
+              <input
+                type="range"
+                min="85"
+                max="100"
+                value={temperatura}
+                onChange={alterarTemperatura}
+                className={styles.sliderTemperatura}
+              />
+            </div>
+            <button className={styles.button} onClick={abrirModalTempo}>
+              Ajustar Tempo de Extração
+            </button>
+            {mostrarModalTempo && (
+              <div className={styles.modal}>
+                <div className={styles.modalContent}>
+                  <h3>Tempo de Extração</h3>
+                  <input
+                    type="number"
+                    value={tempoExtracao}
+                    min="10"
+                    max="60"
+                    onChange={(e) => setTempoExtracao(e.target.value)}
+                  />
+                  <button onClick={confirmarTempo} className={styles.button}>
+                    Pronto
+                  </button>
+                </div>
+              </div>
+            )}
+            <div className={styles.actionButtonsContainer}>
+              <div className={styles.buttonColumn}>
+                <button
+                  className={`${styles.waterButton} ${mode === 'limpeza' || waterAdded ? styles.disabledButton : ''}`}
+                  onClick={addWater}
+                  disabled={mode === 'limpeza' || waterAdded}
+                >
+                  <MdWaterDrop />
+                </button>
+                <button
+                  className={`${styles.brewButton} ${mode === 'limpeza' ? styles.disabledButton : ''}`}
+                  onClick={brewCoffee}
+                  disabled={mode === 'limpeza' || waterLevel !== 100 || coffeeLevel !== 100}
+                >
+                  <MdCoffee />
+                </button>
+              </div>
+              <div className={styles.buttonColumn}>
+                <button
+                  className={`${styles.coffeeBeanButton} ${mode === 'limpeza' || coffeeAdded ? styles.disabledButton : ''}`}
+                  onClick={addCoffee}
+                  disabled={mode === 'limpeza' || coffeeAdded}
+                >
+                  <GiCoffeeBeans />
+                </button>
+                <button
+                  className={`${styles.cleanButton} ${mode === 'limpeza' ? styles.cleanButtonActive : ''}`}
+                  onClick={cleanMachine}
+                  disabled={mode !== 'limpeza'}
+                >
+                  <MdCleaningServices />
                 </button>
               </div>
             </div>
-          )}
-          <div className={styles.actionButtonsContainer}>
-            <div className={styles.buttonColumn}>
-              <button
-                className={`${styles.waterButton} ${mode === 'limpeza' || waterAdded ? styles.disabledButton : ''}`}
-                onClick={addWater}
-                disabled={mode === 'limpeza' || waterAdded}
-              >
-                <MdWaterDrop />
-              </button>
-              <button
-                className={`${styles.brewButton} ${mode === 'limpeza' ? styles.disabledButton : ''}`}
-                onClick={brewCoffee}
-                disabled={mode === 'limpeza' || waterLevel !== 100 || coffeeLevel !== 100}
-              >
-                <MdCoffee />
-              </button>
-            </div>
-            <div className={styles.buttonColumn}>
-              <button
-                className={`${styles.coffeeBeanButton} ${mode === 'limpeza' || coffeeAdded ? styles.disabledButton : ''}`}
-                onClick={addCoffee}
-                disabled={mode === 'limpeza' || coffeeAdded}
-              >
-                <GiCoffeeBeans />
-              </button>
-              <button
-                className={`${styles.cleanButton} ${mode === 'limpeza' ? styles.cleanButtonActive : ''}`}
-                onClick={cleanMachine}
-                disabled={mode !== 'limpeza'}
-              >
-                <MdCleaningServices />
-              </button>
-            </div>
           </div>
-        </div>
-        <div className={styles.configSection}>
-          <label>
-            Sons: <input type="checkbox" checked={somAtivo} onChange={() => setSomAtivo(!somAtivo)} />
-          </label>
-        </div>
-        <div className={styles.configSection}>
-          <label>
-            Vibração: <input type="checkbox" checked={vibracaoAtiva} onChange={() => setVibracaoAtiva(!vibracaoAtiva)} />
-          </label>
-        </div>
-        <WaterLevelBar waterLevel={waterLevel} />
-        <div className={styles.temperatureLevelContainer}>
-          <div
-            className={styles.temperatureLevel}
-            style={{ height: `${(temperatura - 85) * 6.66}%` }} // mapeando 85-100 para 0-100%
-          ></div>
-          <div className={styles.temperatureText}>
-            {temperatura}°C
-          </div>
-        </div>
-        <CoffeeLevelBar coffeeLevel={coffeeLevel} />
-        <BrewedCoffeeBar brewedCoffeeLevel={brewedCoffeeLevel} />
-        <div className={styles.volumeRecipienteContainer}>
-          <div className={styles.volumeRecipienteBar}>
+          <div className={styles.alavancaContainer}>
             <div
-              className={styles.volumeRecipienteFill}
-              style={{ width: `${brewedCoffeeLevel}%` }}
-            ></div>
+              className={`${styles.alavanca} ${brewedCoffeeLevel < 25 || torneiraUsos >= 4 ? styles.desativado : ""}`}
+              onClick={servirCafe}
+            >
+              <div className={styles.tracoHorizontal}></div>
+              <div className={styles.tracoVertical}></div>
+            </div>
+            {mensagem && (
+              <div className={styles.mensagemServir}>{mensagem}</div>
+            )}
           </div>
-          <p>{Math.round((brewedCoffeeLevel / 100) * 500)} ml</p>
-        </div>
+          <div className={styles.configSection}>
+            <label>
+              Sons: <input type="checkbox" checked={somAtivo} onChange={() => setSomAtivo(!somAtivo)} />
+            </label>
+          </div>
+          <div className={styles.configSection}>
+            <label>
+              Vibração: <input type="checkbox" checked={vibracaoAtiva} onChange={() => setVibracaoAtiva(!vibracaoAtiva)} />
+            </label>
+          </div>
+          <WaterLevelBar waterLevel={waterLevel} />
+          <div className={styles.temperatureLevelContainer}>
+            <div
+              className={styles.temperatureLevel}
+              style={{ height: `${(temperatura - 85) * 6.66}%` }} // mapeando 85-100 para 0-100%
+            ></div>
+            <div className={styles.temperatureText}>
+              {temperatura}°C
+            </div>
+          </div>
+          <CoffeeLevelBar coffeeLevel={coffeeLevel} />
+          <BrewedCoffeeBar brewedCoffeeLevel={brewedCoffeeLevel} />
+          
+          <div className={styles.volumeRecipienteContainer}>
+            <div className={styles.volumeRecipienteBar}>
+              <div
+                className={styles.volumeRecipienteFill}
+                style={{ width: `${brewedCoffeeLevel}%` }}
+              ></div>
+            </div>
+            <p>{Math.round((brewedCoffeeLevel / 100) * 500)} ml</p>
+          </div>
 
+        </div>
       </div>
-    </div>
     </>
-    
+
   );
 }
 

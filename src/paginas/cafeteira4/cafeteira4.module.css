@@ -213,3 +213,49 @@
   opacity: 0.5;
   pointer-events: none;
 }
+
+.niveis {
+  display: flex;
+  justify-content: space-around;
+  margin: 20px 0;
+}
+
+.nivelItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.botaoNivel {
+  padding: 8px 16px;
+  font-size: 14px;
+  background-color: #0088cc;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  margin-top: 8px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.botaoNivel:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.barraCafeHorizontalContainer {
+  width: 80%;
+  height: 20px;
+  background-color: #eee;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  margin: 10px auto;
+  overflow: hidden;
+}
+
+.barraCafeHorizontal {
+  height: 100%;
+  background-color: brown;
+  transition: width 0.3s ease;
+}
+

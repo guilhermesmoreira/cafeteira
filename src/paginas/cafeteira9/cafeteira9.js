@@ -16,10 +16,11 @@ function Cafeteira9() {
   const [perfilIndex, setPerfilIndex] = useState(0);
   const [progresso, setProgresso] = useState(0);
   const [tempoRestante, setTempoRestante] = useState(0);
-  const [agua, setAgua] = useState(100);
+  const [agua, setAgua] = useState(0);
   const [borra, setBorra] = useState(0);
   const [modoAcessivel, setModoAcessivel] = useState(false);
   const [cafeServido, setCafeServido] = useState(false);
+  const [cafePercentual, setCafePercentual] = useState(0);
 
   const perfilAtual = perfis[perfilIndex];
   const audioPronto = new Audio(somCafePronto);
@@ -30,10 +31,12 @@ function Cafeteira9() {
     let timer;
     if (estado === "preparando") {
       setProgresso(0);
+      setCafePercentual(0);
       setTempoRestante(perfilAtual.tempo);
       timer = setInterval(() => {
         setProgresso((p) => {
           const novo = p + 10;
+          setCafePercentual((prev) => Math.min(100, prev + 10));
           if (novo >= 100) {
             clearInterval(timer);
             setEstado("pronto");
@@ -50,7 +53,7 @@ function Cafeteira9() {
   }, [estado, perfilAtual]);
 
   const iniciarPreparo = () => {
-    if (estado === "idle" && agua >= 20 && borra <= 80) {
+    if (estado === "idle" && agua >= 20 && borra >= 20) {
       setEstado("preparando");
       setCafeServido(false);
     } else {
@@ -64,7 +67,42 @@ function Cafeteira9() {
     setBorra(0);
     setEstado("idle");
     setCafeServido(false);
+    setCafePercentual(0);
     audioLimpar.play();
+  };
+
+  const preencherAgua = () => {
+    if (agua < 100) {
+      let valor = 0;
+      const intervalo = setInterval(() => {
+        valor += 10;
+        setAgua((a) => {
+          if (a >= 100) {
+            clearInterval(intervalo);
+            return 100;
+          }
+          return Math.min(100, a + 10);
+        });
+        if (valor >= 100) clearInterval(intervalo);
+      }, 100);
+    }
+  };
+
+  const preencherBorra = () => {
+    if (borra < 100) {
+      let valor = 0;
+      const intervalo = setInterval(() => {
+        valor += 10;
+        setBorra((b) => {
+          if (b >= 100) {
+            clearInterval(intervalo);
+            return 100;
+          }
+          return Math.min(100, b + 10);
+        });
+        if (valor >= 100) clearInterval(intervalo);
+      }, 100);
+    }
   };
 
   const resetar = () => {
@@ -72,10 +110,12 @@ function Cafeteira9() {
     setProgresso(0);
     setTempoRestante(0);
     setCafeServido(false);
+    setCafePercentual(0);
   };
 
   const servirCafe = () => {
-    if (estado === "pronto") {
+    if (estado === "pronto" && cafePercentual >= 25) {
+      setCafePercentual((prev) => Math.max(0, prev - 25));
       setCafeServido(true);
     }
   };
@@ -86,9 +126,9 @@ function Cafeteira9() {
       <div className={styles.display}>
         <p>{
           estado === "preparando" ? "Preparando café..." :
-          estado === "pronto" ? "☕ Café pronto!" :
-          estado === "erro" ? "Erro! Verifique água ou borras." :
-          "Selecione e prepare"
+            estado === "pronto" ? "☕ Café pronto!" :
+              estado === "erro" ? "Erro! Verifique água ou café." :
+                "Selecione e prepare"
         }</p>
         {estado === "preparando" && (
           <>
@@ -113,11 +153,25 @@ function Cafeteira9() {
       </div>
 
       <div className={styles.niveis}>
-        <p>Água: {agua}%</p>
-        <div className={styles.barra}><div className={styles.agua} style={{ width: `${agua}%` }}></div></div>
+        <div className={styles.nivelItem}>
+          <p>Água: {agua}%</p>
+          <div className={styles.barra}>
+            <div className={styles.agua} style={{ width: `${agua}%` }}></div>
+          </div>
+          <button onClick={preencherAgua}>+ Água</button>
+        </div>
 
-        <p>Borras: {borra}%</p>
-        <div className={styles.barra}><div className={styles.borra} style={{ width: `${borra}%` }}></div></div>
+        <div className={styles.nivelItem}>
+          <p>Café: {borra}%</p>
+          <div className={styles.barra}>
+            <div className={styles.borra} style={{ width: `${borra}%` }}></div>
+          </div>
+          <button onClick={preencherBorra}>+ Café</button>
+        </div>
+      </div>
+
+      <div className={styles.barraCafe}>
+        <div className={styles.nivelCafe} style={{ width: `${cafePercentual}%` }}></div>
       </div>
 
       <div

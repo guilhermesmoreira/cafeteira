@@ -9,19 +9,20 @@ function Cafeteira4() {
   const [unit, setUnit] = useState("C");
   const [tempo, setTempo] = useState(5);
   const [tempoRestante, setTempoRestante] = useState(5);
-  const [agua, setAgua] = useState(70);
-  const [cafe, setCafe] = useState(50);
+  const [agua, setAgua] = useState(0);
+  const [cafe, setCafe] = useState(0);
   const [estado, setEstado] = useState("Stand-by");
   const [feedback, setFeedback] = useState(true);
   const [uso, setUso] = useState(0);
   const [cafePronto, setCafePronto] = useState(false);
   const [mensagem, setMensagem] = useState("");
   const [isVibrating, setIsVibrating] = useState(false);
-
   const audioBeep = new Audio(beep);
   const audioVibra = new Audio(somLimpar);
   const audioErro = new Audio(beep);
   const audioCafePronto = new Audio(somCafePronto);
+  const [barraCafe, setBarraCafe] = useState(0);
+
 
   const iniciar = () => {
     if (agua < 20 || cafe < 20) {
@@ -51,18 +52,22 @@ function Cafeteira4() {
   useEffect(() => {
     if (estado !== "Extraindo café" || tempoRestante <= 0) return;
 
+    const total = tempo;
     const timer = setInterval(() => {
       setTempoRestante((prev) => {
-        if (prev <= 1) {
+        const novo = prev - 1;
+        setBarraCafe((prevBarra) => Math.min(100, prevBarra + (100 / total)));
+        if (novo <= 0) {
           clearInterval(timer);
           return 0;
         }
-        return prev - 1;
+        return novo;
       });
     }, 1000);
 
     return () => clearInterval(timer);
   }, [estado, tempoRestante]);
+
 
   useEffect(() => {
     if (estado === "Extraindo café" && tempoRestante === 0) {
@@ -87,14 +92,45 @@ function Cafeteira4() {
     setMensagem("Máquina limpa com sucesso!");
     setUso(0);
     setCafePronto(false);
+    setAgua(0);     // Zera a água
+    setCafe(0);     // Zera o café
+    setBarraCafe(0);
     tocarSom(audioVibra);
+
   };
 
+
   const servirCafe = () => {
-    if (!cafePronto) return;
+    if (!cafePronto || barraCafe < 25) return;
+
+    setBarraCafe((prev) => Math.max(0, prev - 25));
     setMensagem("☕ Café Servido!");
-    setCafePronto(false);
+    setCafePronto(barraCafe - 25 >= 25); // desativa se barra ficar abaixo de 25%
   };
+
+
+  const preencherNivel = (tipo) => {
+    const intervalo = setInterval(() => {
+      if (tipo === "agua") {
+        setAgua((prev) => {
+          if (prev >= 100) {
+            clearInterval(intervalo);
+            return 100;
+          }
+          return prev + 1;
+        });
+      } else if (tipo === "cafe") {
+        setCafe((prev) => {
+          if (prev >= 100) {
+            clearInterval(intervalo);
+            return 100;
+          }
+          return prev + 1;
+        });
+      }
+    }, 30); // velocidade de preenchimento (ms)
+  };
+
 
   const tempDisplay = unit === "C" ? `${temp}°C` : `${Math.round(temp * 9 / 5 + 32)}°F`;
 
@@ -104,32 +140,29 @@ function Cafeteira4() {
 
       {mensagem && <div className={styles.mensagem}>{mensagem}</div>}
 
-      <div className={styles.sliders}>
-        <div>
+      <div className={styles.niveis}>
+        <div className={styles.nivelItem}>
           <div className={styles.valorVertical}>{agua}%</div>
-          <input
-            type="range"
-            min="0"
-            max="100"
-            value={agua}
-            onChange={(e) => setAgua(Number(e.target.value))}
-            className={styles.sliderVertical}
-          />
-          <p>Água</p>
+          <button
+            className={styles.botaoNivel}
+            onClick={() => preencherNivel("agua")}
+            disabled={agua >= 100}
+          >
+            Adicionar Água
+          </button>
         </div>
-        <div>
+        <div className={styles.nivelItem}>
           <div className={styles.valorVertical}>{cafe}%</div>
-          <input
-            type="range"
-            min="0"
-            max="100"
-            value={cafe}
-            onChange={(e) => setCafe(Number(e.target.value))}
-            className={styles.sliderVertical}
-          />
-          <p>Café</p>
+          <button
+            className={styles.botaoNivel}
+            onClick={() => preencherNivel("cafe")}
+            disabled={cafe >= 100}
+          >
+            Adicionar Café
+          </button>
         </div>
       </div>
+
 
       <div className={styles.temperatura}>
         <button onClick={() => setTemp(temp - 1)}>-</button>
@@ -176,6 +209,12 @@ function Cafeteira4() {
       </div>
 
       {/* Alavanca */}
+      <div className={styles.barraCafeHorizontalContainer}>
+        <div
+          className={styles.barraCafeHorizontal}
+          style={{ width: `${barraCafe}%` }}
+        />
+      </div>
       <div
         className={`${styles.alavanca} ${!cafePronto ? styles.desativado : ""}`}
         onClick={servirCafe}
