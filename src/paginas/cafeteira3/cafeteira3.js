@@ -36,7 +36,8 @@ const LEDIndicator = ({ status }) => {
 export default function Cafeteira3() {
   const [ligada, setLigada] = useState(false);
   const [modo, setModo] = useState("preparo");
-  const [agua, setAgua] = useState(80);
+  const [agua, setAgua] = useState(0);
+  const [cafe, setCafe] = useState(0);
   const [progresso, setProgresso] = useState(0);
   const [status, setStatus] = useState("Pronto");
   const [necessitaLimpeza, setNecessitaLimpeza] = useState(false);
@@ -76,7 +77,19 @@ export default function Cafeteira3() {
 
   const iniciar = () => {
     if (!ligada) return;
+    if (agua < 20 || cafe < 20) {
+      setStatus("Erro");
+      setAlerta({ type: "error", message: "Água ou café insuficiente." });
+      playSound("beep.mp3");
+      vibrar("curto");
+      return;
+    }
+
+    setAlerta(null);
     setProgresso(0);
+    setAgua((prev) => prev - 20);
+    setCafe((prev) => prev - 20);
+
     let interval = setInterval(() => {
       setProgresso((prev) => {
         if (prev >= 100) {
@@ -89,15 +102,10 @@ export default function Cafeteira3() {
         }
         return prev + 1;
       });
-    }, 30);
+    }, tempoExtracao * 10);
 
-    if (modo === "preparo") {
-      setStatus("Preparando Café");
-      playSound("beep.mp3");
-    } else {
-      setStatus("Limpando Máquina");
-      playSound("beep.mp3");
-    }
+    setStatus(modo === "preparo" ? "Preparando Café" : "Limpando Máquina");
+    playSound("beep.mp3");
   };
 
   const ligarOuDesligar = () => {
@@ -160,6 +168,11 @@ export default function Cafeteira3() {
             />
           </div>
 
+          <div className={styles.insumos}>
+            <p>Água: {agua}% <button onClick={() => setAgua(100)}>+ Água</button></p>
+            <p>Café: {cafe}% <button onClick={() => setCafe(100)}>+ Café</button></p>
+          </div>
+
           {status === "Preparando Café" && (
             <>
               <p>Tempo de Extração: {tempoExtracao} segundos</p>
@@ -195,7 +208,7 @@ export default function Cafeteira3() {
                   value={tempoExtracao}
                   min="10"
                   max="60"
-                  onChange={(e) => setTempoExtracao(e.target.value)}
+                  onChange={(e) => setTempoExtracao(Number(e.target.value))}
                 />
                 <button onClick={confirmarTempo} className={styles.button}>
                   Pronto
