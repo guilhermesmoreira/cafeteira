@@ -47,14 +47,16 @@
   margin-top: 1rem;
 }
 
-.temperaturaSection, .volumeSection {
+.temperaturaSection,
+.volumeSection {
   margin-top: 1rem;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-.temperaturaSection input, .volumeSection input {
+.temperaturaSection input,
+.volumeSection input {
   width: 100%;
   margin-top: 0.5rem;
 }
@@ -98,4 +100,90 @@
 .alert.warning {
   background-color: #fff3cd;
   color: #856404;
+}
+
+.alert.error {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+.alert.success {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+/* Novas barras de insumos e café pronto */
+
+.barras {
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.barraLabel {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0.5rem 0 0.25rem 0;
+  font-weight: bold;
+}
+
+.barra {
+  width: 100%;
+  height: 16px;
+  background-color: #e0e0e0;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+}
+
+.barraInterna {
+  height: 100%;
+  transition: width 0.3s ease;
+}
+
+.barraAgua {
+  background-color: #4da6ff;
+}
+
+.barraCafe {
+  background-color: #964B00;
+}
+
+.barraPronto {
+  background-color: #6e4b1f;
+}
+
+/* Torneira para servir café pronto */
+
+.torneira {
+  width: 40px;
+  height: 60px;
+  margin: 20px auto;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  transition: transform 0.2s ease;
+}
+
+.torneira:hover {
+  transform: scale(1.05);
+}
+
+.tracoHorizontal {
+  width: 40px;
+  height: 10px;
+  background-color: #6e4b1f;
+}
+
+.tracoVertical {
+  width: 10px;
+  height: 30px;
+  background-color: #6e4b1f;
+}
+
+.torneiraDesativada {
+  opacity: 0.4;
+  pointer-events: none;
 }

@@ -38,10 +38,10 @@ export default function Cafeteira3() {
   const [modo, setModo] = useState("preparo");
   const [agua, setAgua] = useState(0);
   const [cafe, setCafe] = useState(0);
+  const [cafePronto, setCafePronto] = useState(0);
   const [progresso, setProgresso] = useState(0);
   const [status, setStatus] = useState("Pronto");
   const [necessitaLimpeza, setNecessitaLimpeza] = useState(false);
-  const [intensidadeCafe, setIntensidadeCafe] = useState(3);
   const [temperatura, setTemperatura] = useState(92);
   const [tempoExtracao, setTempoExtracao] = useState(25);
   const [mostrarTempoModal, setMostrarTempoModal] = useState(false);
@@ -60,20 +60,6 @@ export default function Cafeteira3() {
     if (!vibracaoAtiva) return;
     navigator.vibrate(tipo === "curto" ? 100 : 400);
   };
-
-  useEffect(() => {
-    if (agua < 20) {
-      setStatus("Baixo Nível de Água");
-      playSound("beep.mp3");
-      vibrar("curto");
-    } else if (necessitaLimpeza) {
-      setStatus("Necessita Limpeza");
-      playSound("beep.mp3");
-      vibrar("curto");
-    } else {
-      setStatus("Pronto");
-    }
-  }, [agua, necessitaLimpeza]);
 
   const iniciar = () => {
     if (!ligada) return;
@@ -95,6 +81,7 @@ export default function Cafeteira3() {
         if (prev >= 100) {
           clearInterval(interval);
           setStatus("Pronto");
+          setCafePronto((prev) => Math.min(100, prev + 25));
           playSound(modo === "preparo" ? "somCafePronto.wav" : "somLimpar.wav");
           vibrar("longo");
           setNecessitaLimpeza(modo === "preparo");
@@ -108,24 +95,12 @@ export default function Cafeteira3() {
     playSound("beep.mp3");
   };
 
-  const ligarOuDesligar = () => {
-    setLigada((prev) => !prev);
-    playSound("beep.mp3");
-    vibrar("curto");
-  };
-
-  const abrirModalTempo = () => {
-    setMostrarTempoModal(true);
-  };
-
-  const confirmarTempo = () => {
-    setMostrarTempoModal(false);
-    playSound("beep.mp3");
-  };
-
-  const alterarVolume = (e) => {
-    setVolume(e.target.value);
-    playSound("beep.mp3");
+  const servirCafe = () => {
+    if (cafePronto >= 25) {
+      setCafePronto((prev) => prev - 25);
+      playSound("beep.mp3");
+      vibrar("curto");
+    }
   };
 
   return (
@@ -139,7 +114,7 @@ export default function Cafeteira3() {
             <LEDIndicator status={status} />
           </div>
 
-          <button onClick={ligarOuDesligar} className={styles.button}>
+          <button onClick={() => setLigada((prev) => !prev)} className={styles.button}>
             {ligada ? "Desligar" : "Ligar"}
           </button>
 
@@ -155,7 +130,7 @@ export default function Cafeteira3() {
           </div>
 
           <RotarySwitch onChange={setModo} />
-          <TouchPanel onConfigChange={() => {}} onCleanMode={() => setModo("limpeza")} />
+          <TouchPanel onConfigChange={() => { }} onCleanMode={() => setModo("limpeza")} />
 
           <div className={styles.volumeSection}>
             <label>Volume no Recipiente: {volume}ml</label>
@@ -164,25 +139,57 @@ export default function Cafeteira3() {
               min="100"
               max="500"
               value={volume}
-              onChange={alterarVolume}
+              onChange={(e) => setVolume(e.target.value)}
             />
           </div>
 
           <div className={styles.insumos}>
-            <p>Água: {agua}% <button onClick={() => setAgua(100)}>+ Água</button></p>
-            <p>Café: {cafe}% <button onClick={() => setCafe(100)}>+ Café</button></p>
+            <div className={styles.barraLabel}>
+              <span>Água</span>
+              <span>{agua}%</span>
+            </div>
+            <div className={styles.barra}>
+              <div
+                className={`${styles.barraInterna} ${styles.barraAgua}`}
+                style={{ width: `${agua}%` }}
+              ></div>
+            </div>
+
+            <Progress value={agua} />
+            <button onClick={() => setAgua(100)}>+ Água</button>
+
+            <div className={styles.barraLabel}>
+              <span>Café</span>
+              <span>{cafe}%</span>
+            </div>
+            <div className={styles.barra}>
+              <div
+                className={`${styles.barraInterna} ${styles.barraCafe}`}
+                style={{ width: `${cafe}%` }}
+              ></div>
+            </div>
+
+            <Progress value={cafe} />
+            <button onClick={() => setCafe(100)}>+ Café</button>
+
+            <div className={styles.barraLabel}>
+              <span>Café Pronto</span>
+              <span>{cafePronto}%</span>
+            </div>
+            <div className={styles.barra}>
+              <div
+                className={`${styles.barraInterna} ${styles.barraPronto}`}
+                style={{ width: `${cafePronto}%` }}
+              ></div>
+            </div>
+
+            <Progress value={cafePronto} />
+            <button onClick={servirCafe}>☕ Servir</button>
           </div>
 
-          {status === "Preparando Café" && (
+          {(status === "Preparando Café" || status === "Limpando Máquina") && (
             <>
               <p>Tempo de Extração: {tempoExtracao} segundos</p>
-              <Progress value={progresso} />
-            </>
-          )}
-
-          {status === "Limpando Máquina" && (
-            <>
-              <p>Realizando limpeza...</p>
               <Progress value={progresso} />
             </>
           )}
@@ -195,7 +202,7 @@ export default function Cafeteira3() {
             Iniciar {modo === "preparo" ? "Preparo" : "Limpeza"}
           </button>
 
-          <button className={styles.button} onClick={abrirModalTempo}>
+          <button className={styles.button} onClick={() => setMostrarTempoModal(true)}>
             Ajustar Tempo de Extração
           </button>
 
@@ -210,7 +217,7 @@ export default function Cafeteira3() {
                   max="60"
                   onChange={(e) => setTempoExtracao(Number(e.target.value))}
                 />
-                <button onClick={confirmarTempo} className={styles.button}>
+                <button onClick={() => setMostrarTempoModal(false)} className={styles.button}>
                   Pronto
                 </button>
               </div>
