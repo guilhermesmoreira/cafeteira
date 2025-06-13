@@ -52,7 +52,7 @@ function Cafeteira8() {
   }, [uso]);
 
   const iniciarPreparo = () => {
-    if (estado === "idle" && agua >= 20 && borra <= 80) {
+    if (estado === "idle" && agua >= 20 && borra >= 20) {
       setEstado("preparando");
     } else {
       setEstado("erro");
