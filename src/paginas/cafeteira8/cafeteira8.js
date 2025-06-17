@@ -4,6 +4,7 @@ import styles from "./cafeteira8.module.css";
 import beep from "../../assets/beep.mp3";
 import somCafePronto from "../../assets/somCafePronto.wav";
 import somManutencao from "../../assets/somLimpar.wav";
+import ModeloCafeteira from "../../components/ModeloCafeteira";
 
 function Cafeteira8() {
   const [estado, setEstado] = useState("idle");
@@ -83,6 +84,7 @@ function Cafeteira8() {
   };
 
   return (
+    <ModeloCafeteira>
     <div className={styles.cafeteira}>
       <h2 className={styles.titulo}>Cafeteira Touch 8.0</h2>
 
@@ -91,10 +93,10 @@ function Cafeteira8() {
           {estado === "preparando"
             ? "Preparando café..."
             : estado === "pronto"
-            ? "☕ Café pronto!"
-            : estado === "erro"
-            ? "Erro! Verifique níveis ou reinicie."
-            : "Toque para começar"}
+              ? "☕ Café pronto!"
+              : estado === "erro"
+                ? "Erro! Verifique níveis ou reinicie."
+                : "Toque para começar"}
         </p>
         {estado === "preparando" && (
           <>
@@ -143,14 +145,23 @@ function Cafeteira8() {
               style={{ width: `${cafeDisponivel}%` }}
             ></div>
           </div>
-          <button onClick={servirCafe}>☕ Servir Café</button>
+
+          <div
+            className={`${styles.alavanca} ${cafeDisponivel < 25 ? styles.desativado : ""}`}
+            onClick={servirCafe}
+          >
+            <div className={styles.tracoHorizontal}></div>
+            <div className={styles.tracoVertical}></div>
+          </div>
         </div>
+
       </div>
 
       {uso > 0 && uso % 3 === 0 && (
         <div className={styles.alerta}>🔧 Recomendado realizar limpeza!</div>
       )}
     </div>
+    </ModeloCafeteira>
   );
 }
 

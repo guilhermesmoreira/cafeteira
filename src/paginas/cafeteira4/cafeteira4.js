@@ -3,6 +3,7 @@ import styles from "./cafeteira4.module.css";
 import somCafePronto from "../../assets/somCafePronto.wav";
 import somLimpar from "../../assets/somLimpar.wav";
 import beep from "../../assets/beep.mp3";
+import ModeloCafeteira from "../../components/ModeloCafeteira";
 
 function Cafeteira4() {
   const [temp, setTemp] = useState(90);
@@ -135,6 +136,7 @@ function Cafeteira4() {
   const tempDisplay = unit === "C" ? `${temp}°C` : `${Math.round(temp * 9 / 5 + 32)}°F`;
 
   return (
+    <ModeloCafeteira>
     <div className={`${styles.cafeteira} ${isVibrating ? styles.vibrateEffect : ""}`}>
       <h2 className="text-xl font-bold">Cafeteira 4</h2>
 
@@ -234,6 +236,7 @@ function Cafeteira4() {
         </label>
       </div>
     </div>
+    </ModeloCafeteira>
   );
 }
 

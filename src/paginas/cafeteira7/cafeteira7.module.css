@@ -1,193 +1,79 @@
-/* Estilos gerais da cafeteira */
 .cafeteira {
-  width: 320px;
-  margin: 30px auto;
-  padding: 20px;
-  border-radius: 15px;
-  background: #f3f3f3;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-  text-align: center;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-}
-
-/* Estilos do display */
-.display {
-  background: #222;
-  color: #0f0;
-  padding: 15px;
-  margin-bottom: 20px;
-  border-radius: 8px;
-  min-height: 80px;
+  position: relative;
+  width: 300px;
+  height: 600px;
+  margin: 50px auto;
+  background-color: #d3d3d3;
+  border-radius: 20px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-end;
   align-items: center;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
-.infoProgresso {
-  margin-top: 10px;
-  font-size: 14px;
+.display {
+  width: 100%;
+  background-color: #222;
+  color: #0f0;
+  padding: 10px;
+  border-radius: 8px;
+  text-align: center;
+  margin-bottom: 15px;
 }
 
-/* Estilos do seletor de intensidade */
+.infoProgresso p {
+  margin: 5px 0;
+}
+
+.mensagem {
+  color: green;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
 .seletorIntensidade {
-  margin-bottom: 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-}
-
-.seletorIntensidade label {
-  font-size: 16px;
-  color: #333;
-}
-
-.seletorIntensidade select {
-  padding: 8px;
-  font-size: 16px;
-  border: 1px solid #444;
-  border-radius: 5px;
-  background-color: #fff;
-  cursor: pointer;
-}
-
-.seletorIntensidade select:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
-}
-
-.seletorIntensidade select:focus {
-  outline: 2px solid #0f0;
-  outline-offset: 2px;
-}
-
-/* Estilos dos botões */
-.botoes {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
+  margin-bottom: 15px;
+  text-align: center;
 }
 
 .botoes button {
-  padding: 12px 20px;
-  font-size: 16px;
+  margin: 5px;
+  padding: 10px 15px;
+  border-radius: 6px;
   border: none;
-  border-radius: 10px;
   background-color: #444;
-  color: #fff;
+  color: white;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s;
 }
 
 .botoes button:hover {
   background-color: #666;
 }
 
-.botoes button:focus {
-  outline: 2px solid #0f0;
-  outline-offset: 2px;
-}
-
-/* Estilos do indicador de status */
-.indicadores {
-  margin-top: 20px;
-}
-
-.indicador {
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  margin: 0 auto;
-  background-color: #bbb;
-  transition: background-color 0.3s ease;
-}
-
-.indicadorVerde {
-  background-color: #0f0;
-}
-
-.indicadorVermelho {
-  background-color: #f00;
-}
-
-.indicadorAzul {
-  background-color: #00f;
-}
-
-/* Estilo da mensagem exibida ao servir café */
-.mensagemCafe {
-  text-align: center;
-  font-size: 18px;
-  font-weight: bold;
-  color: #2ecc71;
-  margin-top: 10px;
-}
-
-/* Estilo da alavanca (torneira) */
-.alavanca {
-  margin: 20px auto;
-  width: 40px;
-  height: 60px;
-  position: relative;
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
-/* Parte vertical da alavanca */
-.tracoVertical {
-  width: 10px;
-  height: 40px;
-  background-color: #8b4513;
-  border-radius: 4px;
-}
-
-/* Parte horizontal da alavanca */
-.tracoHorizontal {
-  width: 30px;
-  height: 10px;
-  background-color: #8b4513;
-  border-radius: 4px;
-  position: absolute;
-  top: 0;
-}
-
-/* Alavanca desativada (quando café não está pronto) */
-.desativado {
-  opacity: 0.4;
-  pointer-events: none;
-}
-
 .barrasHorizontais {
-  display: flex;
-  justify-content: space-between;
-  gap: 20px;
-  margin: 20px 0;
-  flex-wrap: wrap;
+  width: 100%;
+  margin-bottom: 10px;
 }
 
 .barraContainer {
-  flex: 1;
-  min-width: 150px;
-  text-align: center;
+  margin-bottom: 10px;
 }
 
 .barraRotulo {
   font-weight: bold;
-  margin-bottom: 5px;
+  margin-bottom: 4px;
 }
 
 .barraNivel {
+  background-color: #ccc;
+  height: 12px;
   width: 100%;
-  height: 20px;
-  background-color: #eee;
-  border: 1px solid #ccc;
-  border-radius: 10px;
+  border-radius: 4px;
   overflow: hidden;
-  margin-bottom: 10px;
+  margin-bottom: 5px;
 }
 
 .preenchimento {
@@ -197,16 +83,75 @@
 
 .barraCafePronto {
   width: 100%;
-  height: 16px;
-  background-color: #ddd;
-  border-radius: 10px;
-  margin: 10px 0 0 0;
+  height: 12px;
+  background-color: #eee;
+  border-radius: 6px;
+  margin: 10px auto;
   overflow: hidden;
-  position: relative;
 }
 
 .preenchimentoCafe {
   height: 100%;
-  background-color: #6f4e37;
-  transition: width 0.4s ease;
+  background-color: brown;
+  transition: width 0.3s ease;
+}
+
+.alavanca {
+  width: 40px;
+  height: 60px;
+  margin: 20px auto;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  transition: transform 0.2s ease;
+  position: relative;
+}
+
+.alavanca:hover {
+  transform: scale(1.05);
+}
+
+.tracoHorizontal {
+  position: absolute;
+  width: 60px;
+  height: 20px;
+  background-color: red;
+  top: 0;
+}
+
+.tracoVertical {
+  position: relative;
+  width: 20px;
+  height: 50px;
+  background-color: red;
+  bottom: 0;
+}
+
+.desativado {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+.indicadores {
+  margin-top: 10px;
+}
+
+.indicador {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+}
+
+.indicadorVerde {
+  background-color: green;
+}
+
+.indicadorAzul {
+  background-color: blue;
+}
+
+.indicadorVermelho {
+  background-color: red;
 }

@@ -4,6 +4,7 @@ import styles from "./cafeteira6.module.css";
 import somClique from "../../assets/beep.mp3";
 import somErro from "../../assets/somLimpar.wav";
 import somPronto from "../../assets/somCafePronto.wav";
+import ModeloCafeteira from "../../components/ModeloCafeteira";
 
 function Cafeteira6() {
     const [temperatura, setTemperatura] = useState(92);
@@ -202,6 +203,7 @@ function Cafeteira6() {
 
     return (
         <>
+        <ModeloCafeteira>
             <h2 className="text-xl font-bold">Cafeteira 6</h2>
             <div className={styles.cafeteira}>
                 <div className={styles.topBar}>
@@ -300,6 +302,7 @@ function Cafeteira6() {
 
                 {/* Resto do código continua igual... */}
             </div>
+        </ModeloCafeteira>
         </>
     );
 }

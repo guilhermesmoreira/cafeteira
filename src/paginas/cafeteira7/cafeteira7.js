@@ -4,6 +4,7 @@ import styles from "./cafeteira7.module.css";
 import beep from "../../assets/beep.mp3";
 import somCafePronto from "../../assets/somCafePronto.wav";
 import somLimpar from "../../assets/somLimpar.wav";
+import ModeloCafeteira from "../../components/ModeloCafeteira";
 
 const CONFIG = {
   INTERVALOS: 10,
@@ -162,6 +163,7 @@ function Cafeteira7() {
 
   return (
     <>
+    <ModeloCafeteira>
       <h2 className="text-xl font-bold">Cafeteira 7</h2>
       <div className={styles.cafeteira}>
         <div className={styles.display}>
@@ -237,6 +239,7 @@ function Cafeteira7() {
           <div className={`${styles.indicador} ${classeIndicador()}`} role="status" aria-label={`Status: ${statusDaCafeteira}`}></div>
         </div>
       </div>
+    </ModeloCafeteira>
     </>
   );
 }

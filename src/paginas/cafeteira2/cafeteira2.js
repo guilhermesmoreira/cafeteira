@@ -308,6 +308,7 @@ function Cafeteira2() {
 
   return (
     <>
+     <div className={styles.pageContainer}>
       <h2 className="text-xl font-bold">Cafeteira 2</h2>
       <div className={`${styles.coffeeMakerContainer} ${isVibrating ? styles.vibrateEffect : ''}`}>
 
@@ -441,6 +442,7 @@ function Cafeteira2() {
           </div>
 
         </div>
+      </div>
       </div>
     </>
 

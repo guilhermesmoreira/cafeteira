@@ -7,6 +7,7 @@ import { Alert } from "../../components/ui/alert";
 import RotarySwitch from "../../components/ui/RotarySwitch";
 import PowerButton from "../../components/ui/PowerButton";
 import TouchPanel from "../../components/ui/TouchPanel";
+import ModeloCafeteira from "../../components/ModeloCafeteira";
 
 const LEDIndicator = ({ status }) => {
   const getLEDColor = (status) => {
@@ -104,6 +105,7 @@ export default function Cafeteira3() {
   };
 
   return (
+    <ModeloCafeteira>
     <div className={styles.container}>
       <Card className={styles.card}>
         <CardContent>
@@ -184,7 +186,13 @@ export default function Cafeteira3() {
             </div>
 
             <Progress value={cafePronto} />
-            <button onClick={servirCafe}>☕ Servir</button>
+            <div
+              className={`${styles.alavanca} ${(cafePronto < 25) ? styles.desativado : ""}`}
+              onClick={servirCafe}
+            >
+              <div className={styles.tracoHorizontal}></div>
+              <div className={styles.tracoVertical}></div>
+            </div>
           </div>
 
           {(status === "Preparando Café" || status === "Limpando Máquina") && (
@@ -235,5 +243,6 @@ export default function Cafeteira3() {
         </CardContent>
       </Card>
     </div>
+    </ModeloCafeteira>
   );
 }

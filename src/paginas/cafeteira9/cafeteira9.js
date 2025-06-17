@@ -4,6 +4,7 @@ import styles from "./cafeteira9.module.css";
 import beep from "../../assets/beep.mp3";
 import somCafePronto from "../../assets/somCafePronto.wav";
 import somLimpar from "../../assets/somLimpar.wav";
+import ModeloCafeteira from "../../components/ModeloCafeteira";
 
 const perfis = [
   { nome: "Padrão", temperatura: 90, tempo: 10 },
@@ -121,6 +122,7 @@ function Cafeteira9() {
   };
 
   return (
+    <ModeloCafeteira>
     <div className={`${styles.cafeteira} ${modoAcessivel ? styles.acessivel : ""}`}>
       <h2 className={styles.titulo}>☕ Cafeteira Inteligente 9.0</h2>
       <div className={styles.display}>
@@ -184,6 +186,7 @@ function Cafeteira9() {
 
       {cafeServido && <p className={styles.mensagemCafe}>☕ Café Servido!</p>}
     </div>
+    </ModeloCafeteira>
   );
 }
 

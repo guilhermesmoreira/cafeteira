@@ -136,40 +136,6 @@
   transition: width 0.3s ease;
 }
 
-.alavanca {
-  width: 40px;
-  height: 40px;
-  margin: 0 auto;
-  background-color: #444;
-  border-radius: 50%;
-  cursor: pointer;
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: transform 0.2s;
-}
-
-.alavanca:hover {
-  transform: scale(1.1);
-}
-
-.tracoHorizontal,
-.tracoVertical {
-  background-color: white;
-  position: absolute;
-}
-
-.tracoHorizontal {
-  width: 20px;
-  height: 4px;
-}
-
-.tracoVertical {
-  width: 4px;
-  height: 20px;
-}
-
 .desativado {
   opacity: 0.3;
   pointer-events: none;
@@ -181,3 +147,49 @@
   color: green;
   text-align: center;
 }
+
+.alavanca {
+  width: 40px;
+  height: 60px;
+  margin: 20px auto;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  transition: transform 0.2s ease;
+  position: relative;
+}
+
+.alavanca:hover {
+  transform: scale(1.05);
+}
+
+.tracoHorizontal {
+  position: absolute;
+  width: 60px;
+  height: 20px;
+  background-color: red;
+  top: 0;
+}
+
+.tracoVertical {
+  position: relative;
+  width: 20px;
+  height: 50px;
+  background-color: red;
+  bottom: 0;
+}
+
+.desativado {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+.mensagemServir {
+  text-align: center;
+  margin-top: 8px;
+  font-weight: bold;
+  color: green;
+}
+

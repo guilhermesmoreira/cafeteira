@@ -81,3 +81,41 @@ input[type="range"] {
   color: #c00;
   font-weight: bold;
 }
+
+.alavanca {
+  width: 40px;
+  height: 60px;
+  margin: 10px auto;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  transition: transform 0.2s ease;
+  position: relative;
+}
+
+.alavanca:hover {
+  transform: scale(1.05);
+}
+
+.tracoHorizontal {
+  position: absolute;
+  width: 60px;
+  height: 20px;
+  background-color: red;
+  top: 0;
+}
+
+.tracoVertical {
+  position: relative;
+  width: 20px;
+  height: 50px;
+  background-color: red;
+  bottom: 0;
+}
+
+.desativado {
+  opacity: 0.4;
+  pointer-events: none;
+}

@@ -4,6 +4,7 @@ import styles from "./cafeteira5.module.css";
 import somClique from "../../assets/beep.mp3";
 import somErro from "../../assets/somLimpar.wav";
 import somPronto from "../../assets/somCafePronto.wav";
+import ModeloCafeteira from "../../components/ModeloCafeteira";
 
 function Cafeteira5() {
   const [temperatura, setTemperatura] = useState(92);
@@ -87,6 +88,7 @@ function Cafeteira5() {
 
   return (
     <>
+    <ModeloCafeteira>
       <h2 className="text-xl font-bold">Cafeteira 5</h2>
       <div className={styles.cafeteira}>
         <div className={styles.topBar}>
@@ -138,12 +140,15 @@ function Cafeteira5() {
         </div>
 
         <div
-          className={`${styles.alavanca} ${cafePronto < 25 || torneiraUsos >= 4 ? styles.desativado : ""}`}
+          className={`${styles.alavanca} ${(cafePronto < 25 || torneiraUsos >= 4) ? styles.desativado : ""}`}
           onClick={servirCafe}
         >
           <div className={styles.tracoHorizontal}></div>
           <div className={styles.tracoVertical}></div>
         </div>
+
+        {mensagem && <div className={styles.mensagemServir}>{mensagem}</div>}
+
 
         {mensagem && <div className={styles.mensagemServir}>{mensagem}</div>}
 
@@ -182,6 +187,7 @@ function Cafeteira5() {
           </label>
         </div>
       </div>
+    </ModeloCafeteira>
     </>
   );
 }

@@ -11,6 +11,7 @@ import Cafeteira6 from './paginas/cafeteira6/cafeteira6';
 import Cafeteira7 from './paginas/cafeteira7/cafeteira7';
 import Cafeteira8 from './paginas/cafeteira8/cafeteira8';
 import Cafeteira9 from './paginas/cafeteira9/cafeteira9';
+import ExemploUso from './paginas/Exemplo/exemplo';
 
 // Componente da página inicial com os botões
 function Home() {
@@ -63,6 +64,11 @@ function Home() {
             Cafeteira 9
           </Link>
         </button>
+        <button>
+          <Link to="/exemplo" style={{ textDecoration: 'none', color: 'inherit' }}>
+            Exemplo
+          </Link>
+        </button>
       </div>
     </div>
   );
@@ -83,6 +89,7 @@ function App() {
           <Route path="/cafeteira7" element={<Cafeteira7 />} /> {/* Rota para Cafeteira 7 */}
           <Route path="/cafeteira8" element={<Cafeteira8 />} /> {/* Rota para Cafeteira 8 */}
           <Route path="/cafeteira9" element={<Cafeteira9 />} /> {/* Rota para Cafeteira 9 */}
+          <Route path="/exemplo" element={<ExemploUso />} /> {/* Rota para Exemplo */}
         </Routes>
       </div>
     </Router>

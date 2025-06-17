@@ -1,3 +1,13 @@
+.pageContainer {
+  background-color: #e0e0e0;
+  min-height: 100vh;
+  padding: 30px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+
 .coffeeMakerContainer {
     display: flex;
     justify-content: center;
@@ -9,7 +19,7 @@
   .coffeeMaker {
     position: relative;
     width: 500px;
-    height: 850px; /* Aumentar de 500px para 650px (ou mais se precisar) */
+    height: 850px; 
     background-color: #f5f5f5;
     border-radius: 20px;
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
