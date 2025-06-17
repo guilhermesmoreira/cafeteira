@@ -5,6 +5,7 @@ import beepSound from '../../assets/beep.mp3';
 import coffeeReadySound from '../../assets/somCafePronto.wav';
 import cleanSound from '../../assets/somLimpar.wav';
 import { GiCoffeeBeans } from "react-icons/gi";
+import ModeloCafeteira from '../../components/ModeloCafeteira';
 
 
 function PowerButton({ isOn, setIsOn }) {
@@ -308,6 +309,7 @@ function Cafeteira2() {
 
   return (
     <>
+    <ModeloCafeteira>
      <div className={styles.pageContainer}>
       <h2 className="text-xl font-bold">Cafeteira 2</h2>
       <div className={`${styles.coffeeMakerContainer} ${isVibrating ? styles.vibrateEffect : ''}`}>
@@ -444,6 +446,7 @@ function Cafeteira2() {
         </div>
       </div>
       </div>
+    </ModeloCafeteira>
     </>
 
   );

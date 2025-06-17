@@ -64,11 +64,11 @@ function Home() {
             Cafeteira 9
           </Link>
         </button>
-        <button>
+        {/* <button>
           <Link to="/exemplo" style={{ textDecoration: 'none', color: 'inherit' }}>
             Exemplo
           </Link>
-        </button>
+        </button> */}
       </div>
     </div>
   );
